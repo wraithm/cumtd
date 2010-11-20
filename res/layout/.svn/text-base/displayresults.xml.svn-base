@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+ android:id="@+id/RelativeLayout01"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_height="fill_parent"
+   android:layout_width="fill_parent">
+
+	<Button
+		style="@style/ButtonStyle"
+		android:layout_centerHorizontal="true"
+		android:id="@+id/RefreshButton"
+		android:text="@string/refresh"
+		android:layout_marginTop="25px"></Button>
+	<TextView
+		style="@style/DisplayFont"
+		android:layout_below="@+id/RefreshButton"
+		android:id="@+id/ResultsTextView01" 
+		android:text="@+id/ResultsTextView01"></TextView>
+</RelativeLayout>
+
+
