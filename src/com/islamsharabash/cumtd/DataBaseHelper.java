@@ -1,8 +1,6 @@
 package com.islamsharabash.cumtd;
 
 import java.io.*;
-import java.util.Vector;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -167,9 +165,6 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
-		Vector<Integer> favStops = getOldFavoriteStops(db);
-		
 		// delete the old db and make a new one
 		db.close();
 		File dbFile = new File(DB_PATH + DB_NAME);
@@ -181,47 +176,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// finally reset favorites
-		setOldFavoriteStops(favStops);
 	}
-	
-	/**
-	 * @param db
-	 * @return Vector of Integers with stopIDs of favorites
-	 */
-	private Vector<Integer> getOldFavoriteStops(SQLiteDatabase db) {
-		Cursor oldCursor = db.query(DATABASE_TABLE,
-				new String[] {KEY_ID, STOP_ID},
-				"_book = 1",
-				null, null, null, "_loc ASC");
 
-		Vector<Integer> favStops = new Vector<Integer>();
-
-		// get all stops that 
-		if(!oldCursor.moveToFirst()){
-			while(!oldCursor.isAfterLast()) {
-				favStops.add(oldCursor.getInt(1));
-			}
-		}
-		
-		return favStops;
-	}
-	
-	/**
-	 * setOldFavoriteStops sets each stopID as a favorite in favStops
-	 * @param favStops
-	 */
-	private void setOldFavoriteStops(Vector<Integer> favStops) {
-		openDataBase();
-
-		for (int i = 0; i < favStops.size(); i++) {
-			setFavorite(new Stop(favStops.get(i)));	
-		}
-		
-		close();
-	}
- 
 	/**
 	 * Sets the specified stop as a favorite
 	 * @param _stop
