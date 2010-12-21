@@ -97,7 +97,7 @@ public class CumtdSearch {
 	
 	//return a stop object with Data
 	public Stop getStop(){
-		return stop.setStopLocation(results[0]);
+		return stop.setName(results[0]);
 	}
 	
 	

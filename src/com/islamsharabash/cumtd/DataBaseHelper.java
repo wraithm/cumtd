@@ -1,6 +1,7 @@
 package com.islamsharabash.cumtd;
 
 import java.io.*;
+import java.util.Vector;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,23 +12,25 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseHelper extends SQLiteOpenHelper{
+	
 	//The Android's default system path of your application database. 
 	private static String DB_NAME = "cumtdDB.db";
 	private static final String DATABASE_TABLE ="stopTable";
     private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
-	//private static final int DATABASE_VERSION = 2;
+    
+	private static final int VERSION = 2;
 	private SQLiteDatabase myDataBase; 
 	private final Context myContext;
 	 
 	//Database fields
-	public static final String KEY_ID ="_id";
-	public static final String STOP_ID="_stop";
-	public static final String LOCATION="_loc";
-	public static final String BOOKMARK="_book";
-	
-	
+	public static final String KEY_ID = "_id";
+	public static final String STOP_ID = "_stop";
+	public static final String NAME = "_name";
+	public static final String FAVORITES = "_favorites";
+	public static final String LATITUDE = "_latitude";
+	public static final String LONGITUDE = "_longitude";
 
- 
+	
     
     /**
      * Constructor
@@ -35,12 +38,11 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @param context
      */
     public DataBaseHelper(Context context) {
- 
     	super(context, DB_NAME, null, 1);
         this.myContext = context;
     }	
  
-  /**
+    /**
      * Creates a empty database on the system and rewrites it with your own database.
      * */
     public void createDataBase() throws IOException{
@@ -48,18 +50,27 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     	boolean dbExist = checkDataBase();
  
     	if(dbExist){
-    		//do nothing - database already exist
+    		// check if we need to upgrade
+    		openDataBase();
+    		if(myDataBase.getVersion() != VERSION)
+    			onUpgrade(myDataBase, myDataBase.getVersion(), VERSION);
+
     	}else{
  
-    		//By calling this method and empty database will be created into the default system path
-               //of your application so we are gonna be able to overwrite that database with our database.
+    		// By calling this method and empty database will be created into the default system path
+            // of your application so we are gonna be able to overwrite that database with our database.
         	this.getReadableDatabase();
- 
         	try {
- 
+        		
+        		// copy data
     			copyDataBase();
- 
-    		} catch (IOException e) {
+    			
+    			// set database version
+    			openDataBase();
+    			myDataBase.setVersion(VERSION);
+    			close();
+    			
+        	} catch (IOException e) {
  
         		throw new Error("Error copying database");
  
@@ -95,6 +106,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     	return checkDB != null ? true : false;
     }
  
+    
     /**
      * Copies your database from your local assets-folder to the just created empty database in the
      * system folder, from where it can be accessed and handled.
@@ -124,6 +136,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     	myInput.close();
  
     }
+    
  
     public void openDataBase() throws SQLException{
  
@@ -133,6 +146,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
  
     }
  
+    
     @Override
 	public synchronized void close() {
  
@@ -143,55 +157,155 @@ public class DataBaseHelper extends SQLiteOpenHelper{
  
 	}
  
+    
 	@Override
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(SQLiteDatabase db) {}
  
-	}
- 
+
+	/**
+	 * onUpgrade saves all the favorites, and install the new database
+	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
- 
+		
+		Vector<Integer> favStops = getOldFavoriteStops(db);
+		
+		// delete the old db and make a new one
+		db.close();
+		File dbFile = new File(DB_PATH + DB_NAME);
+		dbFile.delete();
+		
+		try {
+			createDataBase();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// finally reset favorites
+		setOldFavoriteStops(favStops);
+	}
+	
+	/**
+	 * @param db
+	 * @return Vector of Integers with stopIDs of favorites
+	 */
+	private Vector<Integer> getOldFavoriteStops(SQLiteDatabase db) {
+		Cursor oldCursor = db.query(DATABASE_TABLE,
+				new String[] {KEY_ID, STOP_ID},
+				"_book = 1",
+				null, null, null, "_loc ASC");
+
+		Vector<Integer> favStops = new Vector<Integer>();
+
+		// get all stops that 
+		if(!oldCursor.moveToFirst()){
+			while(!oldCursor.isAfterLast()) {
+				favStops.add(oldCursor.getInt(1));
+			}
+		}
+		
+		return favStops;
+	}
+	
+	/**
+	 * setOldFavoriteStops sets each stopID as a favorite in favStops
+	 * @param favStops
+	 */
+	private void setOldFavoriteStops(Vector<Integer> favStops) {
+		openDataBase();
+
+		for (int i = 0; i < favStops.size(); i++) {
+			setFavorite(new Stop(favStops.get(i)));	
+		}
+		
+		close();
 	}
  
-	public boolean saveBookmark(Stop _stop) throws MalformedStop{
+	/**
+	 * Sets the specified stop as a favorite
+	 * @param _stop
+	 * @return true if setting the favorite succeeded, else false
+	 * @throws MalformedStop
+	 */
+	public boolean setFavorite(Stop _stop) {
 		ContentValues newValues = new ContentValues();
-		newValues.put(BOOKMARK, 1);		
-		if( (myDataBase.update(DATABASE_TABLE, newValues, STOP_ID + " = ?", new String[] {Integer.toString(_stop.getStopID())})) == 1)
+		newValues.put(FAVORITES, 1);		
+		if ((myDataBase.update(DATABASE_TABLE,
+								newValues,
+								STOP_ID + " = ?",
+								new String[] {Integer.toString(_stop.getStopID())})) == 1)
 			return true;
-		//fuck yeah... screw good code, throw a MalformedStop if it's not there!
-		else throw new MalformedStop();			
+		
+		else return false;			
 	}
 	
-	public Cursor getAllEntries(){
-		return myDataBase.query(DATABASE_TABLE, new String[] {KEY_ID, LOCATION, STOP_ID}, null, null, null, null, LOCATION + " ASC");
+	/**
+	 * @return cursor with every row in database
+	 */
+	public Cursor getAllStops(){
+		return myDataBase.query(DATABASE_TABLE,
+								new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+								null, null, null, null, NAME + " ASC");
 	}
 	
-	public Cursor getBookmarks(){
-		return myDataBase.query(DATABASE_TABLE, new String[] {KEY_ID, LOCATION, STOP_ID}, BOOKMARK + " = 1", null, null, null, LOCATION + " ASC");
+	/**
+	 * @return all rows that are favorites
+	 */
+	public Cursor getFavorites(){
+		return myDataBase.query(DATABASE_TABLE,
+								new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+								FAVORITES + " = 1", null, null, null, NAME + " ASC");
 	}
 	
-	public void removeBookmark(long _rowIndex){
+	/**
+	 * sets the stop specified by _rowIndex as not a favorite
+	 * @param _rowIndex
+	 * @return true if succeeded, else false
+	 */
+	public boolean removeFavorite(Stop _stop) {
 		ContentValues newValues = new ContentValues();
-		newValues.put(BOOKMARK, 0);		
-		myDataBase.update(DATABASE_TABLE, newValues, KEY_ID + " = ?", new String[] {Long.toString(_rowIndex)});
-		return;
+		newValues.put(FAVORITES, 0);		
+		if ((myDataBase.update(DATABASE_TABLE,
+								newValues,
+								STOP_ID + " = ?",
+								new String[] {Integer.toString(_stop.getStopID())})) == 1)
+			return true;
+		
+		else return false;			
 	}
 	
-	
+	/**
+	 * Used to filter by location name
+	 * @param constraint
+	 * @return Cursor with updated rows
+	 */
 	public Cursor filter(String constraint){
-		return myDataBase.query(DATABASE_TABLE, new String[] {KEY_ID, LOCATION, STOP_ID}, LOCATION + " LIKE '%" + constraint + "%'", null, null, null, LOCATION + " ASC");
+		return myDataBase.query(DATABASE_TABLE,
+								new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+								NAME + " LIKE '%" + constraint + "%'",
+								null, null, null, NAME + " ASC");
 	}
 	
-	
-	//TODO is this even needed?!?! ...yes
+	/**
+	 * 
+	 * @param _rowIndex
+	 * @return Stop object specified by _rowIndex
+	 */
 	public Stop getStop(long _rowIndex){
 		//query the database for the stop_id and location, put it in a stop object
-		Cursor mCursor = myDataBase.query(DATABASE_TABLE, new String[] {LOCATION, STOP_ID}, KEY_ID + "= ?", new String[] {Long.toString(_rowIndex)}, null, null, null );
-		//mCursor.getColumnIndexOrThrow(STOP_ID);
+		Cursor mCursor = myDataBase.query(DATABASE_TABLE,
+											new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+											KEY_ID + "= ?",
+											new String[] {Long.toString(_rowIndex)},
+											null, null, null );
 		mCursor.moveToFirst();
 		
 		/** Note to self, if you change the db, you have to change how it gets values! (It is the order you query) **/
-		return new Stop().setStopID(mCursor.getInt(1)).setStopLocation(mCursor.getString(0));
+		return new Stop(mCursor.getInt(0),
+						mCursor.getString(1),
+						mCursor.getDouble(2),
+						mCursor.getDouble(3));
 	}
  
 }

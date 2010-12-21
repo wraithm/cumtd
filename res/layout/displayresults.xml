@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <RelativeLayout
  android:id="@+id/RelativeLayout01"
   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,16 +7,27 @@
    android:layout_width="fill_parent">
 
 	<Button
-		style="@style/ButtonStyle"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:id="@+id/RefreshButton"
 		android:text="@string/refresh"
 		android:layout_marginTop="25px"></Button>
-	<TextView
-		style="@style/DisplayFont"
+	
+	<ProgressBar
 		android:layout_below="@+id/RefreshButton"
-		android:id="@+id/ResultsTextView01" 
-		android:text="@+id/ResultsTextView01"></TextView>
+		android:layout_marginTop="25px"
+		android:layout_centerHorizontal="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/loading"
+		android:visibility="invisible"></ProgressBar>
+		
+	<TextView
+		android:layout_height="fill_parent"
+   		android:layout_width="fill_parent"
+		android:layout_below="@+id/RefreshButton"
+		android:id="@+id/ResultsTextView01"></TextView>
 </RelativeLayout>
 
 

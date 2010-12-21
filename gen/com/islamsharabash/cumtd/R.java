@@ -14,33 +14,30 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int RefreshButton=0x7f060001;
-        public static final int RelativeLayout01=0x7f060000;
-        public static final int ResultsTextView01=0x7f060002;
-        public static final int SaveButton01=0x7f060004;
-        public static final int SearchButton01=0x7f060005;
-        public static final int StopEditText=0x7f060003;
+        public static final int FavoriteCB=0x7f050006;
+        public static final int NameTV=0x7f050005;
+        public static final int RefreshButton=0x7f050001;
+        public static final int RelativeLayout01=0x7f050000;
+        public static final int ResultsTextView01=0x7f050003;
+        public static final int StopEditText=0x7f050004;
+        public static final int loading=0x7f050002;
     }
     public static final class layout {
         public static final int displayresults=0x7f030000;
-        public static final int main=0x7f030001;
+        public static final int favorites=0x7f030001;
+        public static final int lookupstops=0x7f030002;
+        public static final int main=0x7f030003;
+        public static final int stop_list_item=0x7f030004;
     }
     public static final class string {
-        public static final int app_name=0x7f050003;
-        public static final int help=0x7f050004;
-        public static final int load=0x7f050005;
-        public static final int menu_delete=0x7f05000a;
-        public static final int refresh=0x7f050000;
-        public static final int regex1=0x7f050008;
-        public static final int regex2=0x7f050009;
-        public static final int save=0x7f050001;
-        public static final int search=0x7f050002;
-        public static final int searchURL=0x7f050006;
-        public static final int userAgent=0x7f050007;
-    }
-    public static final class style {
-        public static final int ButtonStyle=0x7f040002;
-        public static final int CumtdTheme=0x7f040000;
-        public static final int DisplayFont=0x7f040001;
+        public static final int app_name=0x7f040002;
+        public static final int help=0x7f040003;
+        public static final int load=0x7f040004;
+        public static final int refresh=0x7f040000;
+        public static final int regex1=0x7f040007;
+        public static final int regex2=0x7f040008;
+        public static final int search=0x7f040001;
+        public static final int searchURL=0x7f040005;
+        public static final int userAgent=0x7f040006;
     }
 }
