@@ -37,7 +37,7 @@ public class StopAdapter extends ResourceCursorAdapter {
 		CheckBox FavoriteCB = (CheckBox) view.findViewById(R.id.FavoriteCB);
 		
 		NameTV.setText(cursor.getString(1));
-		FavoriteCB.setChecked((cursor.getInt(3) == 1));
+		FavoriteCB.setChecked((cursor.getInt(4) == 1));
 	}
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,22 +57,23 @@ public class StopAdapter extends ResourceCursorAdapter {
             holder = new ViewHolder();
             holder.NameTV = (TextView) convertView.findViewById(R.id.NameTV);
             holder.FavoriteCB = (CheckBox) convertView.findViewById(R.id.FavoriteCB);
-    //        holder.BigBox = (LinearLayout) convertView.findViewById(R.id.BigBox);
-            holder.stop = new Stop(0000, "undefined name", 0, 0);
-
+            holder.stop = new Stop(0000, "undefined name", 0, 0, false);
 
             convertView.setTag(holder);
+            
         } else {
             // Get the ViewHolder back to get fast access to the TextView
             // and the ImageView.
             holder = (ViewHolder) convertView.getTag();
         }
 
+        // using minimal stops
+        
         // Bind the data efficiently with the holder.
-        Cursor cursor = (Cursor) getItem(position);
-        holder.stop = new Stop(cursor.getInt(2), cursor.getString(1), cursor.getDouble(4), cursor.getDouble(5));
+        Cursor mCursor = (Cursor) getItem(position);
+        holder.stop = new Stop(mCursor.getInt(0), mCursor.getString(1));;
         holder.NameTV.setText(holder.stop.getName());
-        holder.FavoriteCB.setChecked((cursor.getInt(3) == 1));
+        holder.FavoriteCB.setChecked((mCursor.getInt(4) == 1));
         
         holder.FavoriteCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -108,7 +109,6 @@ public class StopAdapter extends ResourceCursorAdapter {
     static class ViewHolder {
         TextView NameTV;
         CheckBox FavoriteCB;
-        LinearLayout BigBox;
         Stop stop;
     }
 

@@ -15,9 +15,17 @@ public class BusRoutesActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-			TextView textview = new TextView(this);
-			textview.setText("Not done yet... want it faster? Buy me coffee.");
-			setContentView(textview);
+			TextView textView = new TextView(this);
+			/**
+			textview.setText("There are two ways this can go: \n \n" +
+					"1) You enter a destination and I get results from google transit (which would tell you which buses to take) I and let you \"favorite\" destinations \n \n" +
+					"2) I list different bus lines and when you click one it displays a picture of that route \n \n" +
+					"Email your preference to: \n"+"islam.sharabash@gmail.com");
+					**/
+			textView.setTextSize(16);
+			textView.setText("Nearby stops is a work in progess \n (if you can't see anything, try zooming in)\n \n" +
+							"Email feedback to islam.sharabash@gmail.com");
+			setContentView(textView);
 	    }
 
 }

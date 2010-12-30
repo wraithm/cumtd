@@ -1,6 +1,7 @@
 package com.islamsharabash.cumtd;
 
 import java.io.IOException;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,16 +21,30 @@ public class FavoritesActivity extends ListActivity {
   	super.onCreate(savedInstanceState);
   	setContentView(R.layout.favorites);
     	
-  	/** setup the database **/
-	setupDB();
-	
+  	setupDB();
+  	
 	/** setup List/Cursor/Filter **/
 	mCursor = db.getFavorites();
+
 	mListAdapter = new StopAdapter(ctx, mCursor, db, cumtd.FAVORITESACTIVITY);
 	setListAdapter(mListAdapter);
 	
   }//onCreate close
 
+  private void setupDB() {
+	  try {
+	  db.createDataBase();
+	  } catch (IOException ioe) {
+	  throw new Error("Unable to create database");
+	  }
+
+	  try {
+	  db.openDataBase();
+	  }catch(SQLException sqle){
+	  throw sqle;
+	  }
+  }
+  
   @Override
   public void onResume() {
 	super.onResume();
@@ -37,26 +52,11 @@ public class FavoritesActivity extends ListActivity {
 	mListAdapter.notifyDataSetChanged();
   }
   
-  private void setupDB() {
-	try {
-		db.createDataBase();
-	} catch (IOException ioe) {
-		throw new Error("Unable to create database");
-	}
-
-	try {
-		db.openDataBase();
-	}catch(SQLException sqle){
-		throw sqle;
-	}  
-  }
-	
-	              
   @Override
-  protected void onDestroy() { 
-  	super.onDestroy();
-	db.close();
+  protected void onDestroy() {
+   super.onDestroy();
+   mCursor.close();
+   db.close();
   }
-
-
+ 
 }

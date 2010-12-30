@@ -27,6 +27,10 @@
 		android:layout_height="fill_parent"
    		android:layout_width="fill_parent"
 		android:layout_below="@+id/RefreshButton"
+		android:scrollbars="vertical"
+		android:maxLines="21"
+		android:textColor="#FFF"
+		android:textSize="16sp"
 		android:id="@+id/ResultsTextView01"></TextView>
 </RelativeLayout>
 

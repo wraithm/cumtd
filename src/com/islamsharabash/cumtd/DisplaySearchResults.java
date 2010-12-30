@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -60,6 +61,7 @@ public class DisplaySearchResults extends Activity {
 		cStop = (Stop) stopBundle.getSerializable("stop");
 		loading = (ProgressBar) findViewById(R.id.loading);
 		resultsTV = (TextView) findViewById(R.id.ResultsTextView01);
+		resultsTV.setMovementMethod(new ScrollingMovementMethod());
 		
 		loading.setVisibility(4);
 		getResults();

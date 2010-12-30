@@ -1,6 +1,8 @@
 package com.islamsharabash.cumtd;
 
 import java.io.*;
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,7 +18,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	private static final String DATABASE_TABLE ="stopTable";
     private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
     
-	private static final int VERSION = 2;
+	private static final int VERSION = 3;
 	private SQLiteDatabase myDataBase; 
 	private final Context myContext;
 	 
@@ -27,8 +29,9 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	public static final String FAVORITES = "_favorites";
 	public static final String LATITUDE = "_latitude";
 	public static final String LONGITUDE = "_longitude";
+	public static final String[] ROW = {STOP_ID, NAME, LATITUDE, LONGITUDE, FAVORITES, KEY_ID};
 
-	
+		
     
     /**
      * Constructor
@@ -50,8 +53,10 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     	if(dbExist){
     		// check if we need to upgrade
     		openDataBase();
-    		if(myDataBase.getVersion() != VERSION)
-    			onUpgrade(myDataBase, myDataBase.getVersion(), VERSION);
+    		int cVersion = myDataBase.getVersion();
+    		close();
+    		if(cVersion != VERSION)
+    			onUpgrade(myDataBase, cVersion, VERSION);
 
     	}else{
  
@@ -165,8 +170,39 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// delete the old db and make a new one
-		db.close();
+		if (oldVersion == 2) {
+			
+			System.out.println("Performing upgrade!");
+			openDataBase();
+			// save the old favorites
+			Cursor mCursor = getFavorites();
+			ArrayList<Stop> favs = allCursorToStops(mCursor);
+			mCursor.close();
+			
+			deleteRecreate(db);
+			
+			openDataBase();
+			
+			for (int i = 0; i < favs.size(); i++)
+				setFavorite(favs.get(i));
+			
+			close();
+			
+		} else {
+			
+			deleteRecreate(db);
+			
+		}
+	}
+	
+	/**
+	 * deletes and recreates the database, use extreme caution with this
+	 * @param db
+	 */
+	private void deleteRecreate(SQLiteDatabase db) {
+		if (db.isOpen())
+			close();
+		
 		File dbFile = new File(DB_PATH + DB_NAME);
 		dbFile.delete();
 		
@@ -201,7 +237,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	public Cursor getAllStops(){
 		return myDataBase.query(DATABASE_TABLE,
-								new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+								ROW,
 								null, null, null, null, NAME + " ASC");
 	}
 	
@@ -210,8 +246,49 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	public Cursor getFavorites(){
 		return myDataBase.query(DATABASE_TABLE,
-								new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+								ROW,
 								FAVORITES + " = 1", null, null, null, NAME + " ASC");
+	}
+	
+	/**
+	 * returns a cursor with stops with the bounding box of the distance
+	 * set out by the mile multiplier d
+	 * 
+	 * @param lat
+	 * @param lng
+	 * @param d
+	 * @return
+	 */
+	public Cursor nearStops(int lat, int lng, double d) {
+		int latUpper = (int) (lat + (14460 * d));
+		int latLower  = (int) (lat - (14460 * d));
+		int longUpper = (int) (lng + (18926 * d));
+		int longLower = (int) (lng - (18926 * d));
+		
+		return boundStops(latUpper, latLower, longUpper, longLower);
+	}
+	
+	/**
+	 * returns cursor of stops within the bounds specified
+	 * @param longUpper
+	 * @param longLower
+	 * @param latUpper
+	 * @param latLower
+	 * @return
+	 */
+	public Cursor boundStops(int latUpper, int latLower, int longUpper, int longLower) {
+		
+		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
+						LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+						" WHERE " + LATITUDE + " BETWEEN " + Integer.toString(latLower) +
+						" AND " + Integer.toString(latUpper) +
+						" INTERSECT " +
+						"SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
+						LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+						" WHERE " + LONGITUDE + " BETWEEN " + Integer.toString(longLower) +
+						" AND " + Integer.toString(longUpper);
+		
+		return myDataBase.rawQuery(query, new String[] {});
 	}
 	
 	/**
@@ -238,30 +315,43 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	public Cursor filter(String constraint){
 		return myDataBase.query(DATABASE_TABLE,
-								new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
+								ROW,
 								NAME + " LIKE '%" + constraint + "%'",
 								null, null, null, NAME + " ASC");
 	}
 	
+	
 	/**
-	 * 
-	 * @param _rowIndex
-	 * @return Stop object specified by _rowIndex
+	 * converts all results from cursor to an array list of stops
+	 * @param mCursor
+	 * @return
 	 */
-	public Stop getStop(long _rowIndex){
-		//query the database for the stop_id and location, put it in a stop object
-		Cursor mCursor = myDataBase.query(DATABASE_TABLE,
-											new String[] {KEY_ID, NAME, STOP_ID, FAVORITES, LATITUDE, LONGITUDE},
-											KEY_ID + "= ?",
-											new String[] {Long.toString(_rowIndex)},
-											null, null, null );
+	public ArrayList<Stop> allCursorToStops(Cursor mCursor) {
+		ArrayList<Stop> stopArray = new ArrayList<Stop>();
 		mCursor.moveToFirst();
+		while (!mCursor.isAfterLast()) {
+			stopArray.add(cursorToStop(mCursor));
+			mCursor.moveToNext();
+		}
 		
-		/** Note to self, if you change the db, you have to change how it gets values! (It is the order you query) **/
-		return new Stop(mCursor.getInt(0),
-						mCursor.getString(1),
-						mCursor.getDouble(2),
-						mCursor.getDouble(3));
+		return stopArray;
 	}
- 
+	
+	/**
+	 * converts one cursor to a stop
+	 * @param mCursor
+	 * @return
+	 */
+	public Stop cursorToStop(Cursor mCursor) {
+		if (mCursor.isBeforeFirst() || mCursor.isAfterLast())
+			return null;	
+		Stop mStop = new Stop(
+				mCursor.getInt(0),
+				mCursor.getString(1),
+				mCursor.getInt(2),
+				mCursor.getInt(3),
+				(mCursor.getInt(4) == 1));
+		return mStop;
+	}
+	
 }

@@ -17,14 +17,20 @@ public class Stop implements Serializable {
 	
 	private String name;
 	private int stopID;
-	private double latitude;
-	private double longitude;
+	private int latitude;
+	private int longitude;
+	private boolean favorite;
+	
+	/**
+	 * Constructors
+	 */
 	
 	public Stop() {
 		name = "undefined name";
 		stopID = 0000;
 		latitude = 0;
 		longitude = 0;
+		favorite = false;
 	}
 	
 	public Stop(int _stopID) {
@@ -32,6 +38,7 @@ public class Stop implements Serializable {
 		name = "undefined name";
 		latitude = 0;
 		longitude =0;
+		favorite = false;
 	}
 	
 	public Stop(int _stopID, String _name) {
@@ -39,16 +46,39 @@ public class Stop implements Serializable {
 		name = _name;
 		latitude = 0;
 		longitude =0;
+		favorite = false;
 	}
 	
-	public Stop(int _stopID, String _name, double _latitude, double _longitude) {
+	public Stop(int _stopID, String _name, int _latitude, int _longitude) {
 		stopID = _stopID;
 		name = _name;
 		latitude = _latitude;
 		longitude = _longitude;
+		favorite = false;
+	}
+	
+	public Stop(int _stopID, String _name, int _latitude, int _longitude, boolean _favorite) {
+		stopID = _stopID;
+		name = _name;
+		latitude = _latitude;
+		longitude = _longitude;
+		favorite = _favorite;
 	}
 	
 	
+	/**
+	 * A method!
+	 */
+	public String toString() {
+		return stopID + " " + name + " lat:" + latitude + " lng:" + longitude + " fav:" + favorite;
+	}
+	
+	
+	/**
+	 * Getters and Setters
+	 * @param _stopID
+	 * @return
+	 */
 	public Stop setStopID(int _stopID) {
 		stopID = _stopID;
 		return this;
@@ -59,13 +89,18 @@ public class Stop implements Serializable {
 		return this;
 	}
 	
-	public Stop setLatitude(Double _latitude) {
+	public Stop setLatitude(int _latitude) {
 		latitude = _latitude;
 		return this;
 	}
 	
-	public Stop setLongitude(Double _longitude) {
+	public Stop setLongitude(int _longitude) {
 		latitude = _longitude;
+		return this;
+	}
+	
+	public Stop setFavorite(boolean _favorite) {
+		favorite = _favorite;
 		return this;
 	}
 	
@@ -77,12 +112,16 @@ public class Stop implements Serializable {
 		return name;
 	}
 	
-	public Double getLatitude() {
+	public int getLatitude() {
 		return latitude;
 	}
 	
-	public Double getLongitude() {
+	public int getLongitude() {
 		return longitude;
+	}
+	
+	public boolean getFavorite() {
+		return favorite;
 	}
 
 }

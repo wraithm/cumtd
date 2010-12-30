@@ -8,36 +8,66 @@
 package com.islamsharabash.cumtd;
 
 public final class R {
+    public static final class anim {
+        public static final int fade_in=0x7f040000;
+        public static final int fade_out=0x7f040001;
+    }
     public static final class attr {
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
+        public static final int balloon_overlay_bg_selector=0x7f020000;
+        public static final int balloon_overlay_close=0x7f020001;
+        public static final int balloon_overlay_focused=0x7f020002;
+        public static final int balloon_overlay_unfocused=0x7f020003;
+        public static final int btn_star=0x7f020004;
+        public static final int btn_star_big_off=0x7f020005;
+        public static final int btn_star_big_off_pressed=0x7f020006;
+        public static final int btn_star_big_on=0x7f020007;
+        public static final int btn_star_big_on_pressed=0x7f020008;
+        public static final int bus=0x7f020009;
+        public static final int buscluster=0x7f02000a;
+        public static final int ic_btn_search=0x7f02000b;
+        public static final int ic_dialog_map=0x7f02000c;
+        public static final int ic_menu_mylocation=0x7f02000d;
+        public static final int ic_menu_myplaces=0x7f02000e;
+        public static final int icon=0x7f02000f;
     }
     public static final class id {
-        public static final int FavoriteCB=0x7f050006;
-        public static final int NameTV=0x7f050005;
-        public static final int RefreshButton=0x7f050001;
-        public static final int RelativeLayout01=0x7f050000;
-        public static final int ResultsTextView01=0x7f050003;
-        public static final int StopEditText=0x7f050004;
-        public static final int loading=0x7f050002;
+        public static final int FavoriteCB=0x7f06000e;
+        public static final int NameTV=0x7f06000d;
+        public static final int RefreshButton=0x7f060006;
+        public static final int RelativeLayout01=0x7f060005;
+        public static final int ResultsTextView01=0x7f060008;
+        public static final int StopEditText=0x7f060009;
+        public static final int balloon_inner_layout=0x7f060001;
+        public static final int balloon_item_snippet=0x7f060003;
+        public static final int balloon_item_title=0x7f060002;
+        public static final int balloon_main_layout=0x7f060000;
+        public static final int close_img_button=0x7f060004;
+        public static final int loading=0x7f060007;
+        public static final int mylocationbtn=0x7f06000b;
+        public static final int mymap=0x7f06000c;
+        public static final int stopmapview=0x7f06000a;
     }
     public static final class layout {
-        public static final int displayresults=0x7f030000;
-        public static final int favorites=0x7f030001;
-        public static final int lookupstops=0x7f030002;
-        public static final int main=0x7f030003;
-        public static final int stop_list_item=0x7f030004;
+        public static final int balloon_overlay=0x7f030000;
+        public static final int displayresults=0x7f030001;
+        public static final int favorites=0x7f030002;
+        public static final int lookupstops=0x7f030003;
+        public static final int main=0x7f030004;
+        public static final int mymap=0x7f030005;
+        public static final int nearbystops=0x7f030006;
+        public static final int stop_list_item=0x7f030007;
     }
     public static final class string {
-        public static final int app_name=0x7f040002;
-        public static final int help=0x7f040003;
-        public static final int load=0x7f040004;
-        public static final int refresh=0x7f040000;
-        public static final int regex1=0x7f040007;
-        public static final int regex2=0x7f040008;
-        public static final int search=0x7f040001;
-        public static final int searchURL=0x7f040005;
-        public static final int userAgent=0x7f040006;
+        public static final int app_name=0x7f050002;
+        public static final int help=0x7f050003;
+        public static final int load=0x7f050004;
+        public static final int refresh=0x7f050000;
+        public static final int regex1=0x7f050007;
+        public static final int regex2=0x7f050008;
+        public static final int search=0x7f050001;
+        public static final int searchURL=0x7f050005;
+        public static final int userAgent=0x7f050006;
     }
 }
