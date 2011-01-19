@@ -9,7 +9,7 @@
 
 
 <string name="load">Loading...</string>
-<string name="searchURL">http://stopwatch.cumtd.mobi/?__EVENTTARGET=&amp;__EVENTARGUMENT=&amp;txtSearch=mtd%1$d&amp;cmdSubmit=Search</string>
+<string name="searchURL">http://stopwatch.cumtd.mobi/?__EVENTTARGET=&amp;__EVENTARGUMENT=&amp;txtSearch=mtd%04d&amp;cmdSubmit=Search</string>
 
 <string name="userAgent">Mozilla/5.0 (Linux; U; Android 1.0; en-us; generic) AppleWebKit/525.10+ (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2</string>
 <string name="regex1">(&lt;font color=\&quot;Firebrick\&quot; face=\&quot;verdana, arial\&quot;&gt;).*?(&lt;br&gt;)</string>

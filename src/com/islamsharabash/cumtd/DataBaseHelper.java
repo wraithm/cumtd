@@ -18,7 +18,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	private static final String DATABASE_TABLE ="stopTable";
     private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
     
-	private static final int VERSION = 3;
+	private static final int VERSION = 4;
 	private SQLiteDatabase myDataBase; 
 	private final Context myContext;
 	 
@@ -87,7 +87,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
      * @return true if it exists, false if it doesn't
      */
     private boolean checkDataBase(){
- 
+
     	SQLiteDatabase checkDB = null;
  
     	try{
@@ -146,7 +146,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     	//Open the database
         String myPath = DB_PATH + DB_NAME;
     	myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
- 
+
     }
  
     
@@ -170,7 +170,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion == 2) {
+		if ((oldVersion == 2) || (oldVersion == 3)) {
 			
 			System.out.println("Performing upgrade!");
 			openDataBase();
@@ -178,6 +178,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 			Cursor mCursor = getFavorites();
 			ArrayList<Stop> favs = allCursorToStops(mCursor);
 			mCursor.close();
+			close();
 			
 			deleteRecreate(db);
 			
@@ -314,6 +315,22 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 * @return Cursor with updated rows
 	 */
 	public Cursor filter(String constraint){
+		
+// Code for finding by stop id or by stop location
+		// not used for simplicity sake, also by id needs to handle zero padding
+/**
+		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
+		LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+		" WHERE " + NAME + " LIKE '%" + constraint + "%'" +
+		" UNION " +
+		"SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
+		LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+		" WHERE " + STOP_ID + " LIKE '%" + constraint + "%'" + 
+		"ORDER BY " + NAME + " ASC";
+
+return myDataBase.rawQuery(query, new String[] {});
+**/
+		
 		return myDataBase.query(DATABASE_TABLE,
 								ROW,
 								NAME + " LIKE '%" + constraint + "%'",

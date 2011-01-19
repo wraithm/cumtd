@@ -43,13 +43,13 @@ public class cumtd extends TabActivity {
             	res.getDrawable(R.drawable.ic_btn_search))
                 .setContent(intent);
 	    tabHost.addTab(spec);	    
-
+/**
 	    intent = new Intent().setClass(this, BusRoutesActivity.class);
 	    spec = tabHost.newTabSpec("routes").setIndicator("Routes",
 	            	res.getDrawable(R.drawable.ic_dialog_map))
 	            .setContent(intent);
 	    tabHost.addTab(spec);
-	    
+**/	    
 	    intent = new Intent().setClass(this, FavoritesActivity.class);
 	    spec = tabHost.newTabSpec("favorites").setIndicator("Favorites",
 	             	res.getDrawable(R.drawable.btn_star))
@@ -57,7 +57,7 @@ public class cumtd extends TabActivity {
 	    tabHost.addTab(spec);
 
 	    // change this based upon preferences possibly
-	    tabHost.setCurrentTab(3);
+	    tabHost.setCurrentTab(2);
 	}
 	
 	  private void setupDB() {
