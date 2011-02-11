@@ -43,13 +43,7 @@ public class cumtd extends TabActivity {
             	res.getDrawable(R.drawable.ic_btn_search))
                 .setContent(intent);
 	    tabHost.addTab(spec);	    
-/**
-	    intent = new Intent().setClass(this, BusRoutesActivity.class);
-	    spec = tabHost.newTabSpec("routes").setIndicator("Routes",
-	            	res.getDrawable(R.drawable.ic_dialog_map))
-	            .setContent(intent);
-	    tabHost.addTab(spec);
-**/	    
+
 	    intent = new Intent().setClass(this, FavoritesActivity.class);
 	    spec = tabHost.newTabSpec("favorites").setIndicator("Favorites",
 	             	res.getDrawable(R.drawable.btn_star))
@@ -64,13 +58,13 @@ public class cumtd extends TabActivity {
 		  try {
 		  db.createDataBase();
 		  } catch (IOException ioe) {
-		  throw new Error("Unable to create database");
+			  throw new Error("Unable to create database");
 		  }
 
 		  try {
 		  db.openDataBase();
 		  }catch(SQLException sqle){
-		  throw sqle;
+			  throw sqle;
 		  }
 	  }
 	  

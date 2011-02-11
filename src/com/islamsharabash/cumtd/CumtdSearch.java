@@ -65,28 +65,33 @@ public class CumtdSearch {
 		 //Find the line with the stop and extract it
 			Pattern p = Pattern.compile(ctx.getResources().getString(R.string.regex1));
 			Matcher m = p.matcher(htmlText);
-			m.find();
+			boolean fTitle = m.find();
 			//Check if a stop was even found
-			if (m.group().substring(46, m.group().indexOf('<', 46)).equals("STOP LOOKUP")){
-				results[0] = "Stop not found!";
+			if (fTitle) {
+				if (m.group().substring(46, m.group().indexOf('<', 46)).equals("STOP LOOKUP")){
+					results[0] = "Stop not found!";
+					results[1] = "";
+				} else{
+				results[0] = m.group();
+				results[0] = results[0].substring(46, results[0].indexOf('[', 46));
+						
+			//Find all matches and add them to display
+				 p = Pattern.compile(ctx.getResources().getString(R.string.regex2));
+				 m = p.matcher(htmlText);
+	
+			//clean body text from null
+				 results[1] ="";
+				 String temp;
+				 while(m.find()){
+						temp = m.group();
+						temp = temp.substring(58, temp.indexOf('<', 58));
+						results[1] += "\n" + temp;
+			 
+				 }
+				}
+			} else {
+				results[0] = "Stop not found :(";
 				results[1] = "";
-			} else{
-			results[0] = m.group();
-			results[0] = results[0].substring(46, results[0].indexOf('[', 46));
-					
-		//Find all matches and add them to display
-			 p = Pattern.compile(ctx.getResources().getString(R.string.regex2));
-			 m = p.matcher(htmlText);
-
-		//clean body text from null
-			 results[1] ="";
-			 String temp;
-			 while(m.find()){
-					temp = m.group();
-					temp = temp.substring(58, temp.indexOf('<', 58));
-					results[1] += "\n" + temp;
-		 
-			 }
 			}
 	 }
 	
