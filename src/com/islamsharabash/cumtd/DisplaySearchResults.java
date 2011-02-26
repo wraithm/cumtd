@@ -11,7 +11,7 @@ package com.islamsharabash.cumtd;
 
 import com.islamsharabash.cumtd.CumtdSearch;
 
-import java.io.IOException;
+import java.util.Iterator;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -41,16 +41,33 @@ public class DisplaySearchResults extends Activity {
 		super.handleMessage(msg);
 		
 		Bundle resultsBundle = msg.getData();
-		String[] results = resultsBundle.getStringArray("results");
+		String results = resultsBundle.getString("results");
 		loading.setVisibility(4);
 		///message stuff
-    	resultsTV.setText(results[0]+results[1]);		
+    	resultsTV.setText(cStop.getName()+"\n"+results);		
 	}
 	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		
+		/**
+		 * Should get stop from the intent bundle and then do a search...
+		 * 
+		 * then inflate buses into a pretty view
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
+		
+		
+		
+		
 		
 		//Set the view
 		setContentView(R.layout.displayresults);
@@ -79,6 +96,7 @@ public class DisplaySearchResults extends Activity {
 	
 	private void getResults() {
     	loading.setVisibility(0);
+    	cStop.results.clear();
 		new Search().execute();
 	}
 
@@ -87,23 +105,26 @@ public class DisplaySearchResults extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			CumtdSearch searchObject = new CumtdSearch(cStop, ctx);
-			try{
-				searchObject.fetch();
-				//update the UI
-				updateUI(searchObject.getResults());
-			} catch (IOException e) {
-				//return "Invalid Stop Id"
-				updateUI(new String[] {"Invalid Stop ID", ""});
+			searchObject.getTimes();
+			
+			String allResults = "";
+			
+			for (Iterator<Bus> it = cStop.results.iterator(); it.hasNext(); ) {
+				allResults += it.next().toString() + "\n";
 			}
+
+			updateUI(allResults);
+
 			return null;
 		}
 
 	}//end Search
 	
-	private void updateUI(String[] results){
+	private void updateUI(String results){
+
 		//create a bundle with data, a message with the UIHandler, and send it
 		Bundle resultsBundle = new Bundle();
-		resultsBundle.putStringArray("results", results);
+		resultsBundle.putString("results", results);
 		Message resultsMessage = Message.obtain(UIHandler);
 		resultsMessage.setData(resultsBundle);
 		resultsMessage.sendToTarget();

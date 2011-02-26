@@ -64,10 +64,7 @@ public final class R {
         public static final int help=0x7f050003;
         public static final int load=0x7f050004;
         public static final int refresh=0x7f050000;
-        public static final int regex1=0x7f050007;
-        public static final int regex2=0x7f050008;
         public static final int search=0x7f050001;
         public static final int searchURL=0x7f050005;
-        public static final int userAgent=0x7f050006;
     }
 }

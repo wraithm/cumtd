@@ -71,7 +71,15 @@ public class StopAdapter extends ResourceCursorAdapter {
         
         // Bind the data efficiently with the holder.
         Cursor mCursor = (Cursor) getItem(position);
-        holder.stop = new Stop(mCursor.getInt(0), mCursor.getString(1));;
+        
+        
+        /**
+         * This gets passed everywhere!
+         */
+        holder.stop = new Stop(mCursor.getInt(0), mCursor.getString(1), (mCursor.getInt(4) == 1));
+        
+        
+        
         holder.NameTV.setText(holder.stop.getName());
         holder.FavoriteCB.setChecked((mCursor.getInt(4) == 1));
         

@@ -1,6 +1,7 @@
 package com.islamsharabash.cumtd;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 /**
@@ -22,6 +23,11 @@ public class Stop implements Serializable {
 	private boolean favorite;
 	
 	/**
+	 * List of buses... going to be used for search results and such
+	 */
+	public ArrayList<Bus> results = new ArrayList<Bus>();
+	
+	/**
 	 * Constructors
 	 */
 	
@@ -32,15 +38,7 @@ public class Stop implements Serializable {
 		longitude = 0;
 		favorite = false;
 	}
-	
-	public Stop(int _stopID) {
-		stopID = _stopID;
-		name = "undefined name";
-		latitude = 0;
-		longitude =0;
-		favorite = false;
-	}
-	
+
 	public Stop(int _stopID, String _name) {
 		stopID = _stopID;
 		name = _name;
@@ -49,12 +47,12 @@ public class Stop implements Serializable {
 		favorite = false;
 	}
 	
-	public Stop(int _stopID, String _name, int _latitude, int _longitude) {
+	public Stop(int _stopID, String _name, boolean _fav) {
 		stopID = _stopID;
 		name = _name;
-		latitude = _latitude;
-		longitude = _longitude;
-		favorite = false;
+		latitude = 0;
+		longitude =0;
+		favorite = _fav;
 	}
 	
 	public Stop(int _stopID, String _name, int _latitude, int _longitude, boolean _favorite) {
@@ -73,34 +71,8 @@ public class Stop implements Serializable {
 		return stopID + " " + name + " lat:" + latitude + " lng:" + longitude + " fav:" + favorite;
 	}
 	
-	
-	/**
-	 * Getters and Setters
-	 * @param _stopID
-	 * @return
-	 */
-	public Stop setStopID(int _stopID) {
-		stopID = _stopID;
-		return this;
-	}
-	
 	public Stop setName(String _name) {
 		name = _name;
-		return this;
-	}
-	
-	public Stop setLatitude(int _latitude) {
-		latitude = _latitude;
-		return this;
-	}
-	
-	public Stop setLongitude(int _longitude) {
-		latitude = _longitude;
-		return this;
-	}
-	
-	public Stop setFavorite(boolean _favorite) {
-		favorite = _favorite;
 		return this;
 	}
 	
@@ -119,9 +91,43 @@ public class Stop implements Serializable {
 	public int getLongitude() {
 		return longitude;
 	}
+
+}
+
+/** 
+ * @author islam
+ *
+ *	Bus object encapsulates routename and time til arrival
+ */
+class Bus {
+	private String routeName = null;
+	private String timeTillDepart = null;
 	
-	public boolean getFavorite() {
-		return favorite;
+	Bus(String _routeName, String _timeTillDepart) {
+		routeName = _routeName;
+		timeTillDepart = _timeTillDepart;
+	}
+	
+	public Bus() {
+	}
+	
+	void setRouteName (String _routeName) {
+		routeName = _routeName;
+	}
+	
+	void setTimeTill (String _timeTillDepart) {
+		timeTillDepart = _timeTillDepart;
 	}
 
+	String getRouteName() {
+		return routeName;
+	}
+	
+	String getTimeTillDepart() {
+		return timeTillDepart;
+	}
+	
+	@Override public String toString() {
+		return routeName + " " + timeTillDepart;		
+	}
 }
