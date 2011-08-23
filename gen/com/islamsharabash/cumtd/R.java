@@ -33,21 +33,21 @@ public final class R {
         public static final int icon=0x7f02000f;
     }
     public static final class id {
-        public static final int FavoriteCB=0x7f06000e;
-        public static final int NameTV=0x7f06000d;
+        public static final int FavoriteCB=0x7f060007;
+        public static final int NameTV=0x7f06000e;
         public static final int RefreshButton=0x7f060006;
         public static final int RelativeLayout01=0x7f060005;
-        public static final int ResultsTextView01=0x7f060008;
-        public static final int StopEditText=0x7f060009;
+        public static final int ResultsTextView01=0x7f060009;
+        public static final int StopEditText=0x7f06000a;
         public static final int balloon_inner_layout=0x7f060001;
         public static final int balloon_item_snippet=0x7f060003;
         public static final int balloon_item_title=0x7f060002;
         public static final int balloon_main_layout=0x7f060000;
         public static final int close_img_button=0x7f060004;
-        public static final int loading=0x7f060007;
-        public static final int mylocationbtn=0x7f06000b;
-        public static final int mymap=0x7f06000c;
-        public static final int stopmapview=0x7f06000a;
+        public static final int loading=0x7f060008;
+        public static final int mylocationbtn=0x7f06000c;
+        public static final int mymap=0x7f06000d;
+        public static final int stopmapview=0x7f06000b;
     }
     public static final class layout {
         public static final int balloon_overlay=0x7f030000;

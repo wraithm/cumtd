@@ -112,6 +112,8 @@ public class StopAdapter extends ResourceCursorAdapter {
         
         return convertView;
     }
+	
+	
 
 	
     static class ViewHolder {

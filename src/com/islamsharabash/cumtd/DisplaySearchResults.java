@@ -59,7 +59,7 @@ public class DisplaySearchResults extends Activity {
 		 * then inflate buses into a pretty view
 		 * 
 		 * 
-		 * 
+		 * MAKE START BUTTON DO STUFF!
 		 * 
 		 * 
 		 * 
