@@ -52,23 +52,6 @@ public class DisplaySearchResults extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		
-		/**
-		 * Should get stop from the intent bundle and then do a search...
-		 * 
-		 * then inflate buses into a pretty view
-		 * 
-		 * 
-		 * MAKE START BUTTON DO STUFF!
-		 * 
-		 * 
-		 * 
-		 */
-		
-		
-		
-		
-		
 		//Set the view
 		setContentView(R.layout.displayresults);
     	

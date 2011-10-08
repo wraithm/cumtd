@@ -29,7 +29,8 @@ public class LookupStopsActivity extends ListActivity {
   	/** setup List/Cursor/Filter **/
 	filterText = (EditText) findViewById(R.id.StopEditText);
 	filterText.addTextChangedListener(filterTextWatcher);
-	mListAdapter = new StopAdapter(ctx, db.filter(filterText.getText().toString()), db, cumtd.LOOKUPSTOPSACTIVITY);
+	String searchText = filterText.getText().toString();
+	mListAdapter = new StopAdapter(ctx, db.filter(searchText), db, cumtd.LOOKUPSTOPSACTIVITY);
 	setListAdapter(mListAdapter);
 	
   }//onCreate close
@@ -52,7 +53,8 @@ public class LookupStopsActivity extends ListActivity {
   public void onResume() {
 	super.onResume();
 	if (updateList) {
-		mListAdapter.changeCursor(db.filter(filterText.getText().toString()));
+		String searchText = filterText.getText().toString();
+		mListAdapter.changeCursor(db.filter(searchText));
 		LookupStopsActivity.updateList = false;
 	}
   }
