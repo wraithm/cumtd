@@ -11,82 +11,78 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DataBaseHelper extends SQLiteOpenHelper{
+// code to copy db from assets was found on net, forgot from where
+public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	//The Android's default system path of your application database. 
-	private static String DB_NAME = "cumtdDB.db";
-	private static final String DATABASE_TABLE ="stopTable";
+	private static String DB_NAME = "cumtdDB";
+	private static final String STOP_TABLE ="stopTable";
     private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
     
 	private static final int VERSION = 4;
-	private SQLiteDatabase myDataBase; 
-	private final Context myContext;
+	private SQLiteDatabase database; 
+	private final Context context;
 	 
 	//Database fields
 	public static final String KEY_ID = "_id";
 	public static final String STOP_ID = "_stop";
 	public static final String NAME = "_name";
-	public static final String FAVORITES = "_favorites";
+	public static final String FAVORITE = "_favorite";
 	public static final String LATITUDE = "_latitude";
 	public static final String LONGITUDE = "_longitude";
-	public static final String[] ROW = {STOP_ID, NAME, LATITUDE, LONGITUDE, FAVORITES, KEY_ID};
+	public static final String[] ROW = {STOP_ID, NAME, LATITUDE, LONGITUDE, FAVORITE, KEY_ID};
 
-		
     
     /**
-     * Constructor
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
      * @param context
      */
-    public DataBaseHelper(Context context) {
+    public DatabaseHelper(Context context) {
     	super(context, DB_NAME, null, 1);
-        this.myContext = context;
+        this.context = context;
     }	
  
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      * */
-    public void createDataBase() throws IOException{
+    public void createDatabase() throws IOException{
+    	
+    	boolean dbExist = checkDatabase();
  
-    	boolean dbExist = checkDataBase();
- 
-    	if(dbExist){
+    	if (dbExist) {
     		// check if we need to upgrade
-    		openDataBase();
-    		int cVersion = myDataBase.getVersion();
+    		openDatabase();
+    		int cVersion = database.getVersion();
     		close();
-    		if(cVersion != VERSION)
-    			onUpgrade(myDataBase, cVersion, VERSION);
-
-    	}else{
+    		if (cVersion != VERSION) {
+    			onUpgrade(database, cVersion, VERSION);
+    		}
+    		
+    	} else {
  
     		// By calling this method and empty database will be created into the default system path
             // of your application so we are gonna be able to overwrite that database with our database.
         	this.getReadableDatabase();
         	try {
-        		
         		// copy data
-    			copyDataBase();
+    			copyDatabase();
     			
     			// set database version
-    			openDataBase();
-    			myDataBase.setVersion(VERSION);
+    			openDatabase();
+    			database.setVersion(VERSION);
     			close();
     			
         	} catch (IOException e) {
- 
         		throw new Error("Error copying database");
- 
         	}
     	}
- 
     }
  
     /**
      * Check if the database already exist to avoid re-copying the file each time you open the application.
      * @return true if it exists, false if it doesn't
      */
-    private boolean checkDataBase(){
+    private boolean checkDatabase(){
 
     	SQLiteDatabase checkDB = null;
  
@@ -95,30 +91,25 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     		checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
  
     	}catch(SQLiteException e){
- 
     		//database does't exist yet.
- 
     	}
  
     	if(checkDB != null){
- 
     		checkDB.close();
- 
     	}
  
     	return checkDB != null ? true : false;
     }
- 
     
     /**
      * Copies your database from your local assets-folder to the just created empty database in the
      * system folder, from where it can be accessed and handled.
      * This is done by transfering bytestream.
      * */
-    private void copyDataBase() throws IOException{
+    private void copyDatabase() throws IOException{
  
     	//Open your local db as the input stream
-    	InputStream myInput = myContext.getAssets().open(DB_NAME);
+    	InputStream myInput = context.getAssets().open(DB_NAME);
  
     	// Path to the just created empty db
     	String outFileName = DB_PATH + DB_NAME;
@@ -139,50 +130,40 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     	myInput.close();
  
     }
-    
  
-    public void openDataBase() throws SQLException{
- 
+    public void openDatabase() throws SQLException{
     	//Open the database
         String myPath = DB_PATH + DB_NAME;
-    	myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
-
+    	database = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
     }
  
-    
     @Override
 	public synchronized void close() {
- 
-    	    if(myDataBase != null)
-    		    myDataBase.close();
+    	    if(database != null)
+    		    database.close();
  
     	    super.close();
- 
 	}
- 
     
-	@Override
-	public void onCreate(SQLiteDatabase db) {}
- 
-
 	/**
-	 * onUpgrade saves all the favorites, and install the new database
+	 * onUpgrade saves all the FAVORITE, and install the new database
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		//TODO(ibash) write upgrade from previous db to current db
 		if ((oldVersion == 2) || (oldVersion == 3)) {
 			
 			System.out.println("Performing upgrade!");
-			openDataBase();
-			// save the old favorites
-			Cursor mCursor = getFavorites();
+			openDatabase();
+			// save the old FAVORITE
+			Cursor mCursor = getFAVORITE();
 			ArrayList<Stop> favs = allCursorToStops(mCursor);
 			mCursor.close();
 			close();
 			
 			deleteRecreate(db);
 			
-			openDataBase();
+			openDatabase();
 			
 			for (int i = 0; i < favs.size(); i++)
 				setFavorite(favs.get(i));
@@ -190,10 +171,12 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 			close();
 			
 		} else {
-			
 			deleteRecreate(db);
-			
 		}
+	}
+	
+	public SQLiteDatabase getDatabase() {
+		return database;
 	}
 	
 	/**
@@ -208,13 +191,17 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 		dbFile.delete();
 		
 		try {
-			createDataBase();
+			createDatabase();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	
+	
+	
+	
 	/**
 	 * Sets the specified stop as a favorite
 	 * @param _stop
@@ -223,8 +210,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	public boolean setFavorite(Stop _stop) {
 		ContentValues newValues = new ContentValues();
-		newValues.put(FAVORITES, 1);		
-		if ((myDataBase.update(DATABASE_TABLE,
+		newValues.put(FAVORITE, 1);		
+		if ((database.update(STOP_TABLE,
 								newValues,
 								STOP_ID + " = ?",
 								new String[] {Integer.toString(_stop.getStopID())})) == 1)
@@ -237,18 +224,18 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 * @return cursor with every row in database
 	 */
 	public Cursor getAllStops(){
-		return myDataBase.query(DATABASE_TABLE,
+		return database.query(STOP_TABLE,
 								ROW,
 								null, null, null, null, NAME + " ASC");
 	}
 	
 	/**
-	 * @return all rows that are favorites
+	 * @return all rows that are FAVORITE
 	 */
-	public Cursor getFavorites(){
-		return myDataBase.query(DATABASE_TABLE,
+	public Cursor getFAVORITE(){
+		return database.query(STOP_TABLE,
 								ROW,
-								FAVORITES + " = 1", null, null, null, NAME + " ASC");
+								FAVORITE + " = 1", null, null, null, NAME + " ASC");
 	}
 	
 	/**
@@ -280,16 +267,16 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	public Cursor boundStops(int latUpper, int latLower, int longUpper, int longLower) {
 		
 		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-						LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+						LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
 						" WHERE " + LATITUDE + " BETWEEN " + Integer.toString(latLower) +
 						" AND " + Integer.toString(latUpper) +
 						" INTERSECT " +
 						"SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-						LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+						LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
 						" WHERE " + LONGITUDE + " BETWEEN " + Integer.toString(longLower) +
 						" AND " + Integer.toString(longUpper);
 		
-		return myDataBase.rawQuery(query, new String[] {});
+		return database.rawQuery(query, new String[] {});
 	}
 	
 	/**
@@ -299,8 +286,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 	 */
 	public boolean removeFavorite(Stop _stop) {
 		ContentValues newValues = new ContentValues();
-		newValues.put(FAVORITES, 0);		
-		if ((myDataBase.update(DATABASE_TABLE,
+		newValues.put(FAVORITE, 0);		
+		if ((database.update(STOP_TABLE,
 								newValues,
 								STOP_ID + " = ?",
 								new String[] {Integer.toString(_stop.getStopID())})) == 1)
@@ -320,18 +307,18 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 		// not used for simplicity sake, also by id needs to handle zero padding
 /**
 		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-		LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+		LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
 		" WHERE " + NAME + " LIKE '%" + constraint + "%'" +
 		" UNION " +
 		"SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-		LONGITUDE + ", " + FAVORITES + ", " + KEY_ID + " FROM " + DATABASE_TABLE + 
+		LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
 		" WHERE " + STOP_ID + " LIKE '%" + constraint + "%'" + 
 		"ORDER BY " + NAME + " ASC";
 
-return myDataBase.rawQuery(query, new String[] {});
+return database.rawQuery(query, new String[] {});
 **/
 		
-		return myDataBase.query(DATABASE_TABLE,
+		return database.query(STOP_TABLE,
 								ROW,
 								NAME + " LIKE '%" + constraint + "%'",
 								null, null, null, NAME + " ASC");
@@ -369,6 +356,12 @@ return myDataBase.rawQuery(query, new String[] {});
 				mCursor.getInt(3),
 				(mCursor.getInt(4) == 1));
 		return mStop;
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

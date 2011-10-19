@@ -1,14 +1,11 @@
 package com.islamsharabash.cumtd;
 
-import java.io.IOException;
-
 import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.widget.*;
 
@@ -16,7 +13,6 @@ public class cumtd extends TabActivity {
 
 	public static final int LOOKUPSTOPSACTIVITY = 0;
 	public static final int FAVORITESACTIVITY = 1;
-	public final DataBaseHelper db = new DataBaseHelper(cumtd.this);
 	SharedPreferences mPrefs;
 	int mVersion = 13;
 
@@ -40,9 +36,6 @@ public class cumtd extends TabActivity {
 	    	setVersion();
 	    }
 	 
-	    
-	    setupDB();
-	    
 		
 	    Resources res = getResources(); // Resource object to get Drawables
 	    TabHost tabHost = getTabHost();  // The activity TabHost
@@ -113,23 +106,5 @@ public class cumtd extends TabActivity {
 	    Context mContext = this.getApplicationContext();
 	    mPrefs = mContext.getSharedPreferences("cumtdPrefs", 0); //0 = mode private. only this app can read these preferences
 	 }
-	
-	
-	
-	  private void setupDB() {
-		  try {
-		  db.createDataBase();
-		  } catch (IOException ioe) {
-			  throw new Error("Unable to create database");
-		  }
-
-		  try {
-		  db.openDataBase();
-		  }catch(SQLException sqle){
-			  throw sqle;
-		  }
-	  }
-	  
-
 	
 }
