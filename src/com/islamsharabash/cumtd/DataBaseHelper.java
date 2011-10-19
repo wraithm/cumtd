@@ -202,6 +202,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	
 	
+//TODO(ibash) remove the code below, it's going into DatabaseAPI	
+	
+	
 	/**
 	 * Sets the specified stop as a favorite
 	 * @param _stop
@@ -360,8 +363,6 @@ return database.rawQuery(query, new String[] {});
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

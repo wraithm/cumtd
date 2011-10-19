@@ -9,6 +9,6 @@
 
 
 <string name="load">Loading...</string>
-<string name="searchURL">http://transitfx.cumtd.com/widget/Default2.aspx?pt=30&amp;code=mtd%04d</string>
+<string name="API_KEY">9353bd1b2c2d4f7f814b698d5006be92</string>
 
 </resources>
