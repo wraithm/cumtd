@@ -146,31 +146,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	}
     
 	/**
-	 * onUpgrade saves all the FAVORITE, and install the new database
+	 * onUpgrade upgrades from an old db to a new db
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//TODO(ibash) write upgrade from previous db to current db
-		if ((oldVersion == 2) || (oldVersion == 3)) {
-			
-			System.out.println("Performing upgrade!");
-			openDatabase();
-			// save the old FAVORITE
-			Cursor mCursor = getFAVORITE();
-			ArrayList<Stop> favs = allCursorToStops(mCursor);
-			mCursor.close();
-			close();
-			
-			deleteRecreate(db);
-			
-			openDatabase();
-			
-			for (int i = 0; i < favs.size(); i++)
-				setFavorite(favs.get(i));
-			
-			close();
-			
-		} else {
+		// starting fresh, delete any database that's not current
+		// sorry about the favorites :(
+		if (oldVersion != 5) {
 			deleteRecreate(db);
 		}
 	}

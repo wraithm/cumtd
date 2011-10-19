@@ -9,8 +9,6 @@ package com.islamsharabash.cumtd;
  * 		a button next to the time to view the route... maybe the bus icon? (should be w/e route icon is)
  */
 
-import com.islamsharabash.cumtd.CumtdSearch;
-
 import java.util.Iterator;
 
 import android.app.Activity;
