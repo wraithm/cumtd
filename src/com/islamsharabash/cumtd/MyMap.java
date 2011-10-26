@@ -13,6 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+// extension of map to allow detection of touch
+// TODO cutdown and clean this up... you don't need a listener pattern
 public class MyMap extends FrameLayout {
 	
 	private ImageButton myLocBtn = null;

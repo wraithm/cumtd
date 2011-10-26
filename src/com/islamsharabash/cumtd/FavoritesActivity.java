@@ -1,6 +1,7 @@
 package com.islamsharabash.cumtd;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -11,52 +12,32 @@ import android.os.Bundle;
 
 public class FavoritesActivity extends ListActivity {
 	
-	Context ctx = FavoritesActivity.this;
-	DataBaseHelper db = new DataBaseHelper(FavoritesActivity.this);
-	StopAdapter mListAdapter = null;
-	Cursor mCursor = null;
+	Context context = FavoritesActivity.this;
+	DatabaseAPI db = DatabaseAPI.getInstance();
+	StopAdapter adapter = null;
 	
   @Override
   public void onCreate(Bundle savedInstanceState) {
   	super.onCreate(savedInstanceState);
   	setContentView(R.layout.favorites);
-    	
-  	setupDB();
   	
-	/** setup List/Cursor/Filter **/
-	mCursor = db.getFavorites();
-
-	mListAdapter = new StopAdapter(ctx, mCursor, db, cumtd.FAVORITESACTIVITY);
-	setListAdapter(mListAdapter);
+	adapter = new StopAdapter(context);
+	setListAdapter(adapter);
 	
-  }//onCreate close
-
-  private void setupDB() {
-	  try {
-	  db.createDataBase();
-	  } catch (IOException ioe) {
-	  throw new Error("Unable to create database");
-	  }
-
-	  try {
-	  db.openDataBase();
-	  }catch(SQLException sqle){
-	  throw sqle;
-	  }
   }
   
   @Override
   public void onResume() {
 	super.onResume();
-	mCursor.requery();
-	mListAdapter.notifyDataSetChanged();
+	List<Stop> favorites = db.getFavoriteStops();
+	adapter.setStops(favorites);
+	adapter.notifyDataSetChanged();
+	//TODO(ibash) might have to call refreshDrawableState on the listview... test it
   }
   
   @Override
   protected void onDestroy() {
    super.onDestroy();
-   mCursor.close();
-   db.close();
   }
  
 }

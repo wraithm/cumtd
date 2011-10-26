@@ -25,6 +25,21 @@ public class Stop implements Serializable {
 		favorite = _favorite;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	public int getLatitude() {
+		return latitude;
+	}
+	
+	public int getLongitude() {
+		return longitude;
+	}
+	
+	public boolean isFavorite() {
+		return favorite;
+	}
+	
 	public String toString() {
 		return stopID + " " + name + "; lat:" + latitude + "; lng:" + longitude + "; fav:" + favorite;
 	}

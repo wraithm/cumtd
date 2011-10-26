@@ -12,7 +12,7 @@
 		android:textColor="#FFF"
 		android:textSize="18sp"
 		android:textStyle="bold"
-		android:id="@+id/NameTV"/>
+		android:id="@+id/text"/>
 
 	
 	<CheckBox
@@ -20,6 +20,6 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
 		android:button="@drawable/btn_star"
-		android:id="@+id/FavoriteCB"/>
+		android:id="@+id/star"/>
 
 </RelativeLayout>

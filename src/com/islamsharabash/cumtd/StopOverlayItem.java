@@ -9,18 +9,15 @@ public class StopOverlayItem extends OverlayItem {
 	// never use this
 	public StopOverlayItem(GeoPoint point, String title, String snippet) {
 		super(point, title, snippet);
-		stop = new Stop();
 	}
 	
-	public StopOverlayItem(Stop _stop) {
+	public StopOverlayItem(Stop stop) {
 		
-		super(new GeoPoint(_stop.getLatitude(),
-							_stop.getLongitude()),
-							_stop.getName(),
-							"Tap to see bus times");
-		stop = _stop;
+		super(
+		  new GeoPoint(stop.getLatitude(), stop.getLongitude()),
+		  stop.getName(),
+		  "Tap to see bus times");
 		
-		((StopOverlayItem)this).stop = _stop;
-
+		this.stop = stop;
 	}
 };

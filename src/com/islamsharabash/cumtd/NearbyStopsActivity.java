@@ -27,7 +27,7 @@ public class NearbyStopsActivity extends MapActivity {
 	
 	StopItemizedOverlay stopOverlay;
 	
-	final DataBaseHelper db = new DataBaseHelper(NearbyStopsActivity.this);
+//	final DataBaseHelper db = new DataBaseHelper(NearbyStopsActivity.this);
 	MyMap myMap = null;
 	MyLocationOverlay myLocation = null;
 	MapController mapController = null;
@@ -40,8 +40,6 @@ public class NearbyStopsActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 			setContentView(R.layout.nearbystops);
 			
-			setupDB();
-
 			// setup the mapView, button, and my location
 
 			myMap = (MyMap) findViewById(R.id.mymap);
@@ -77,24 +75,27 @@ public class NearbyStopsActivity extends MapActivity {
 	private void drawStops(int lat, int lng, GeoPoint g) {
 		
 		// does a bounds search to see how many stops are within bounds
+		/**
 		Cursor mCursor = db.boundStops(
 				g.getLatitudeE6() + (lat/2),
 				g.getLatitudeE6() - (lat/2),
 				g.getLongitudeE6() + (lng/2),
 				g.getLongitudeE6() - (lng/2));
+				**/
 		
 		stopOverlay = new StopItemizedOverlay(busDrawable, stopMapView);
 		
 		mapOverlays.clear();
 		stopMapView.postInvalidate();
 	
+		/**
 		if (mCursor.getCount() > 25) {
 			Toast.makeText(getBaseContext(), "Zoom in to see stops", 75).show();
 			mCursor.close();
 		} else {
 			addStops(mCursor);
 		}
-		
+	**/	
 		
 		if (stopOverlay.size() != 0)
 			mapOverlays.add(stopOverlay);
@@ -130,33 +131,19 @@ public class NearbyStopsActivity extends MapActivity {
 	private void addStops (Cursor mCursor) {
 		
 		// add it to the map
-			ArrayList<Stop> mStops = db.allCursorToStops(mCursor);
+//			ArrayList<Stop> mStops = db.allCursorToStops(mCursor);
+		/**
 			for(int i = 0; i < mStops.size(); i++){
 				Stop mStop =  (Stop) mStops.get(i);
 				StopOverlayItem myStopItem = new StopOverlayItem(mStop);
 				stopOverlay.addOverlay(myStopItem);
 			}
+			**/
 			
 			stopOverlay.populateIt();
 			mCursor.close();
 	}
 	
-	
-	private void setupDB() {
-		try {
-			db.createDataBase();
-		} catch (IOException ioe) {
-			throw new Error("Unable to create database");
-		}
-
-		try {
-			db.openDataBase();
-		}catch(SQLException sqle){
-			throw sqle;
-		}
-  }
-	
-	  
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -204,7 +191,6 @@ public class NearbyStopsActivity extends MapActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		db.close();
 	}
 	
 }

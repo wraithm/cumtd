@@ -1,7 +1,5 @@
 package com.islamsharabash.cumtd;
 
-import java.io.IOException;
-
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.content.*;
@@ -13,7 +11,7 @@ import android.widget.*;
 public class LookupStopsActivity extends ListActivity {	
 	
 	Context ctx = LookupStopsActivity.this;
-	DataBaseHelper db = new DataBaseHelper(LookupStopsActivity.this);
+//	DataBaseHelper db = new DataBaseHelper(LookupStopsActivity.this);
 	private EditText filterText = null;
 	public static boolean updateList = false;
 	StopAdapter mListAdapter = null;
@@ -24,37 +22,21 @@ public class LookupStopsActivity extends ListActivity {
   	
   	setContentView(R.layout.lookupstops);
   	
-  	setupDB();
-  	
   	/** setup List/Cursor/Filter **/
 	filterText = (EditText) findViewById(R.id.StopEditText);
 	filterText.addTextChangedListener(filterTextWatcher);
 	String searchText = filterText.getText().toString();
-	mListAdapter = new StopAdapter(ctx, db.filter(searchText), db, cumtd.LOOKUPSTOPSACTIVITY);
+//	mListAdapter = new StopAdapter(ctx, db.filter(searchText), db, cumtd.LOOKUPSTOPSACTIVITY);
 	setListAdapter(mListAdapter);
 	
   }//onCreate close
-  
-  private void setupDB() {
-	  try {
-	  db.createDataBase();
-	  } catch (IOException ioe) {
-	  throw new Error("Unable to create database");
-	  }
-
-	  try {
-	  db.openDataBase();
-	  }catch(SQLException sqle){
-	  throw sqle;
-	  }
-  }
   
   @Override
   public void onResume() {
 	super.onResume();
 	if (updateList) {
 		String searchText = filterText.getText().toString();
-		mListAdapter.changeCursor(db.filter(searchText));
+//		mListAdapter.changeCursor(db.filter(searchText));
 		LookupStopsActivity.updateList = false;
 	}
   }
@@ -72,7 +54,7 @@ public class LookupStopsActivity extends ListActivity {
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before,
 			int count) {	
-		mListAdapter.changeCursor(db.filter(s.toString()));
+//		mListAdapter.changeCursor(db.filter(s.toString()));
 	}	
   };
 	
@@ -82,7 +64,6 @@ public class LookupStopsActivity extends ListActivity {
   protected void onDestroy() {
      super.onDestroy();
      filterText.removeTextChangedListener(filterTextWatcher);
-     db.close();
     }
 }
 

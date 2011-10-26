@@ -1,11 +1,7 @@
 package com.islamsharabash.cumtd;
 
 import java.io.*;
-import java.util.ArrayList;
-
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -15,24 +11,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	//The Android's default system path of your application database. 
-	private static String DB_NAME = "cumtdDB";
-	private static final String STOP_TABLE ="stopTable";
-    private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
+	private static String DB_NAME = "cumtdDB.db";
+	private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
     
-	private static final int VERSION = 4;
+	private static final int VERSION = 5;
 	private SQLiteDatabase database; 
 	private final Context context;
 	 
-	//Database fields
-	public static final String KEY_ID = "_id";
-	public static final String STOP_ID = "_stop";
-	public static final String NAME = "_name";
-	public static final String FAVORITE = "_favorite";
-	public static final String LATITUDE = "_latitude";
-	public static final String LONGITUDE = "_longitude";
-	public static final String[] ROW = {STOP_ID, NAME, LATITUDE, LONGITUDE, FAVORITE, KEY_ID};
-
-    
     /**
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
      * @param context
@@ -41,6 +26,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     	super(context, DB_NAME, null, 1);
         this.context = context;
     }	
+    
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+	}
  
     /**
      * Creates a empty database on the system and rewrites it with your own database.
@@ -152,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// starting fresh, delete any database that's not current
 		// sorry about the favorites :(
-		if (oldVersion != 5) {
+		if (oldVersion != DatabaseHelper.VERSION) {
 			deleteRecreate(db);
 		}
 	}
@@ -192,7 +181,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	 * @param _stop
 	 * @return true if setting the favorite succeeded, else false
 	 * @throws MalformedStop
-	 */
 	public boolean setFavorite(Stop _stop) {
 		ContentValues newValues = new ContentValues();
 		newValues.put(FAVORITE, 1);		
@@ -207,7 +195,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	/**
 	 * @return cursor with every row in database
-	 */
 	public Cursor getAllStops(){
 		return database.query(STOP_TABLE,
 								ROW,
@@ -216,7 +203,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	/**
 	 * @return all rows that are FAVORITE
-	 */
 	public Cursor getFAVORITE(){
 		return database.query(STOP_TABLE,
 								ROW,
@@ -231,7 +217,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	 * @param lng
 	 * @param d
 	 * @return
-	 */
 	public Cursor nearStops(int lat, int lng, double d) {
 		int latUpper = (int) (lat + (14460 * d));
 		int latLower  = (int) (lat - (14460 * d));
@@ -248,7 +233,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	 * @param latUpper
 	 * @param latLower
 	 * @return
-	 */
 	public Cursor boundStops(int latUpper, int latLower, int longUpper, int longLower) {
 		
 		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
@@ -268,7 +252,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	 * sets the stop specified by _rowIndex as not a favorite
 	 * @param _rowIndex
 	 * @return true if succeeded, else false
-	 */
 	public boolean removeFavorite(Stop _stop) {
 		ContentValues newValues = new ContentValues();
 		newValues.put(FAVORITE, 0);		
@@ -285,7 +268,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	 * Used to filter by location name
 	 * @param constraint
 	 * @return Cursor with updated rows
-	 */
 	public Cursor filter(String constraint){
 		
 // Code for finding by stop id or by stop location
@@ -301,7 +283,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		"ORDER BY " + NAME + " ASC";
 
 return database.rawQuery(query, new String[] {});
-**/
 		
 		return database.query(STOP_TABLE,
 								ROW,
@@ -314,7 +295,6 @@ return database.rawQuery(query, new String[] {});
 	 * converts all results from cursor to an array list of stops
 	 * @param mCursor
 	 * @return
-	 */
 	public ArrayList<Stop> allCursorToStops(Cursor mCursor) {
 		ArrayList<Stop> stopArray = new ArrayList<Stop>();
 		mCursor.moveToFirst();
@@ -330,7 +310,6 @@ return database.rawQuery(query, new String[] {});
 	 * converts one cursor to a stop
 	 * @param mCursor
 	 * @return
-	 */
 	public Stop cursorToStop(Cursor mCursor) {
 		if (mCursor.isBeforeFirst() || mCursor.isAfterLast())
 			return null;	
@@ -343,8 +322,5 @@ return database.rawQuery(query, new String[] {});
 		return mStop;
 	}
 
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-	}
-	
+**/	
 }

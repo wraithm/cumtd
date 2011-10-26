@@ -1,88 +1,77 @@
 package com.islamsharabash.cumtd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.view.*;
-import android.view.View.OnClickListener;
 import android.widget.*;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 
-public class StopAdapter extends ResourceCursorAdapter {
-
-	private LayoutInflater mInflater;
-	DataBaseHelper db;
-	Context ctx;
-	int ACTIVITY;
-
-	public StopAdapter(Context context, Cursor c, DataBaseHelper _db, int _activity) {
-		super(context, R.layout.stop_list_item, c);
-		mInflater = LayoutInflater.from(context);
-		db = _db;
-		ACTIVITY = _activity;
+// similar to the ArrayAdapter, but doesn't need a text view
+public class StopAdapter extends BaseAdapter implements ListAdapter {
+	
+	private List<Stop> stops = new ArrayList<Stop>();
+	private LayoutInflater inflater = null;
+	
+	public StopAdapter(Context context) {
+		inflater = LayoutInflater.from(context);
 	}
 	
-	
+	public void setStops(List<Stop> stops) {
+		this.stops = stops;
+	}
+
 	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return li.inflate(R.layout.stop_list_item, parent, false);
+	public int getCount() {
+		return this.stops.size();
 	}
-	
+
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		TextView NameTV = (TextView) view.findViewById(R.id.NameTV);
-		CheckBox FavoriteCB = (CheckBox) view.findViewById(R.id.FavoriteCB);
-		
-		NameTV.setText(cursor.getString(1));
-		FavoriteCB.setChecked((cursor.getInt(4) == 1));
+	public Object getItem(int position) {
+		return this.stops.get(position);
 	}
-	
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	// ref: http://developer.android.com/resources/samples/ApiDemos/src/com/example/android/apis/view/List14.html
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
 		
-        // A ViewHolder keeps references to children views to avoid unneccessary calls
-        // to findViewById() on each row.
-        final ViewHolder holder;
-
-        // When convertView is not null, we can reuse it directly, there is no need
-        // to reinflate it. We only inflate a new View when the convertView supplied
-        // by ListView is null.
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.stop_list_item, null);
-
-            // Creates a ViewHolder and store references to the two children views
-            // we want to bind data to.
+		// create the view or get references to view components
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.stop_list_item, null);	
+			
             holder = new ViewHolder();
-            holder.NameTV = (TextView) convertView.findViewById(R.id.NameTV);
-            holder.FavoriteCB = (CheckBox) convertView.findViewById(R.id.FavoriteCB);
-            holder.stop = new Stop(0000, "undefined name", 0, 0, false);
-
-            convertView.setTag(holder);
+            holder.text = (TextView) convertView.findViewById(R.id.text);
+            holder.star = (CheckBox) convertView.findViewById(R.id.star);
             
-        } else {
-            // Get the ViewHolder back to get fast access to the TextView
-            // and the ImageView.
-            holder = (ViewHolder) convertView.getTag();
-        }
+            convertView.setTag(holder);
+		} else {
+	        holder = (ViewHolder) convertView.getTag();
+		}
+		
+		// set data
+		Stop stop = this.stops.get(position);
+		holder.text.setText(stop.getName());
+		holder.star.setChecked(stop.isFavorite());
+		
+		return convertView;
+	}
+	
+	static class ViewHolder {
+	    TextView text;
+	    CheckBox star;
+	}
 
-        // using minimal stops
-        
-        // Bind the data efficiently with the holder.
-        Cursor mCursor = (Cursor) getItem(position);
-        
-        
-        /**
-         * This gets passed everywhere!
-         */
-        holder.stop = new Stop(mCursor.getInt(0), mCursor.getString(1), (mCursor.getInt(4) == 1));
-        
-        
-        
-        holder.NameTV.setText(holder.stop.getName());
-        holder.FavoriteCB.setChecked((mCursor.getInt(4) == 1));
-        
+	/**
+
+	public View getView(int position, View convertView, ViewGroup parent) {
+       
         holder.FavoriteCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -112,14 +101,5 @@ public class StopAdapter extends ResourceCursorAdapter {
         
         return convertView;
     }
-	
-	
-
-	
-    static class ViewHolder {
-        TextView NameTV;
-        CheckBox FavoriteCB;
-        Stop stop;
-    }
-
+    **/
 }

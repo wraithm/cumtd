@@ -9,8 +9,6 @@ package com.islamsharabash.cumtd;
  * 		a button next to the time to view the route... maybe the bus icon? (should be w/e route icon is)
  */
 
-import java.util.Iterator;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -77,7 +75,7 @@ public class DisplaySearchResults extends Activity {
 	
 	private void getResults() {
     	loading.setVisibility(0);
-    	cStop.results.clear();
+//    	cStop.results.clear();
 		new Search().execute();
 	}
 
@@ -85,14 +83,16 @@ public class DisplaySearchResults extends Activity {
 	private class Search extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			CumtdSearch searchObject = new CumtdSearch(cStop, ctx);
-			searchObject.getTimes();
+//			CumtdSearch searchObject = new CumtdSearch(cStop, ctx);
+//			searchObject.getTimes();
 			
 			String allResults = "";
 			
+			/**
 			for (Iterator<Bus> it = cStop.results.iterator(); it.hasNext(); ) {
 				allResults += it.next().toString() + "\n";
 			}
+			**/
 
 			updateUI(allResults);
 
