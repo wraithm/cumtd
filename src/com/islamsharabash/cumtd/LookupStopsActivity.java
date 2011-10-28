@@ -9,10 +9,9 @@ import android.widget.*;
 
 public class LookupStopsActivity extends ListActivity {	
 	
-	DatabaseAPI db;
-	StopAdapter adapter;
-	private EditText filterET;
-	
+  DatabaseAPI db;
+  StopAdapter adapter;
+  private EditText filterET;
 	
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class LookupStopsActivity extends ListActivity {
 	adapter.setStops(stops);
 	adapter.notifyDataSetChanged();
   }
-  
 
   private TextWatcher filterTextWatcher = new TextWatcher() {
 
@@ -54,8 +52,6 @@ public class LookupStopsActivity extends ListActivity {
 		adapter.notifyDataSetChanged();
 	}	
   };
-	
-
   
   @Override
   protected void onDestroy() {
