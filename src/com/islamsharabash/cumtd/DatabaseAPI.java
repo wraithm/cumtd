@@ -15,6 +15,7 @@ public class DatabaseAPI {
 	private static DatabaseAPI instance = null;
 	private SQLiteDatabase database; 
 	private static String tableName = "stopTable";
+	private static String name = "_name";
 	private static String favorite = "_favorite";
 
 	public static DatabaseAPI getInstance() {
@@ -40,6 +41,13 @@ public class DatabaseAPI {
 
 	
 	// get list of stops by search string (checks for empty too)
+	public List<Stop> getStops(String search) {
+		String query = "SELECT * from " + DatabaseAPI.tableName +
+					   " WHERE " + DatabaseAPI.name +
+					   " LIKE '%" + search + "%'";
+		Cursor cursor = database.rawQuery(query, null);
+		return cursorToStopList(cursor);
+	}
 	
 	// set a stop as a favorite
 

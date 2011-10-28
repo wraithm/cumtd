@@ -1,44 +1,41 @@
 package com.islamsharabash.cumtd;
 
+import java.util.List;
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.content.*;
-import android.database.SQLException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.*;
 
 public class LookupStopsActivity extends ListActivity {	
 	
-	Context ctx = LookupStopsActivity.this;
-//	DataBaseHelper db = new DataBaseHelper(LookupStopsActivity.this);
-	private EditText filterText = null;
-	public static boolean updateList = false;
-	StopAdapter mListAdapter = null;
+	DatabaseAPI db;
+	StopAdapter adapter;
+	private EditText filterET;
+	
 	
   @Override
   public void onCreate(Bundle savedInstanceState) {
   	super.onCreate(savedInstanceState);
-  	
   	setContentView(R.layout.lookupstops);
   	
-  	/** setup List/Cursor/Filter **/
-	filterText = (EditText) findViewById(R.id.StopEditText);
-	filterText.addTextChangedListener(filterTextWatcher);
-	String searchText = filterText.getText().toString();
-//	mListAdapter = new StopAdapter(ctx, db.filter(searchText), db, cumtd.LOOKUPSTOPSACTIVITY);
-	setListAdapter(mListAdapter);
+	db = DatabaseAPI.getInstance();
 	
-  }//onCreate close
+  	adapter = new StopAdapter(this);
+  	setListAdapter(adapter);
+  	
+	filterET = (EditText) findViewById(R.id.StopEditText);
+	filterET.addTextChangedListener(filterTextWatcher);
+  }
   
   @Override
   public void onResume() {
 	super.onResume();
-	if (updateList) {
-		String searchText = filterText.getText().toString();
-//		mListAdapter.changeCursor(db.filter(searchText));
-		LookupStopsActivity.updateList = false;
-	}
+	String search = filterET.getText().toString();
+	
+	List<Stop> stops = db.getStops(search);
+	adapter.setStops(stops);
+	adapter.notifyDataSetChanged();
   }
   
 
@@ -48,13 +45,13 @@ public class LookupStopsActivity extends ListActivity {
 	public void afterTextChanged(Editable s) {}
 	
 	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {}
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 	
 	@Override
-	public void onTextChanged(CharSequence s, int start, int before,
-			int count) {	
-//		mListAdapter.changeCursor(db.filter(s.toString()));
+	public void onTextChanged(CharSequence search, int start, int before, int count) {	
+		List<Stop> stops = db.getStops(search.toString());
+		adapter.setStops(stops);
+		adapter.notifyDataSetChanged();
 	}	
   };
 	
@@ -63,7 +60,7 @@ public class LookupStopsActivity extends ListActivity {
   @Override
   protected void onDestroy() {
      super.onDestroy();
-     filterText.removeTextChangedListener(filterTextWatcher);
-    }
+     filterET.removeTextChangedListener(filterTextWatcher);
+  }
 }
 
