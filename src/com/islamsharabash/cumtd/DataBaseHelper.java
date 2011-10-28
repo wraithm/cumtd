@@ -168,9 +168,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 			e.printStackTrace();
 		}
 	}
-
-	
-	
 	
 	
 //TODO(ibash) remove the code below, it's going into DatabaseAPI	
@@ -192,23 +189,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		else return false;			
 	}
-	
-	/**
-	 * @return cursor with every row in database
-	public Cursor getAllStops(){
-		return database.query(STOP_TABLE,
-								ROW,
-								null, null, null, null, NAME + " ASC");
-	}
-	
-	/**
-	 * @return all rows that are FAVORITE
-	public Cursor getFAVORITE(){
-		return database.query(STOP_TABLE,
-								ROW,
-								FAVORITE + " = 1", null, null, null, NAME + " ASC");
-	}
-	
+
 	/**
 	 * returns a cursor with stops with the bounding box of the distance
 	 * set out by the mile multiplier d
@@ -263,64 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		else return false;			
 	}
-	
-	/**
-	 * Used to filter by location name
-	 * @param constraint
-	 * @return Cursor with updated rows
-	public Cursor filter(String constraint){
-		
-// Code for finding by stop id or by stop location
-		// not used for simplicity sake, also by id needs to handle zero padding
-/**
-		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-		LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
-		" WHERE " + NAME + " LIKE '%" + constraint + "%'" +
-		" UNION " +
-		"SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-		LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
-		" WHERE " + STOP_ID + " LIKE '%" + constraint + "%'" + 
-		"ORDER BY " + NAME + " ASC";
 
-return database.rawQuery(query, new String[] {});
-		
-		return database.query(STOP_TABLE,
-								ROW,
-								NAME + " LIKE '%" + constraint + "%'",
-								null, null, null, NAME + " ASC");
-	}
-	
-	
-	/**
-	 * converts all results from cursor to an array list of stops
-	 * @param mCursor
-	 * @return
-	public ArrayList<Stop> allCursorToStops(Cursor mCursor) {
-		ArrayList<Stop> stopArray = new ArrayList<Stop>();
-		mCursor.moveToFirst();
-		while (!mCursor.isAfterLast()) {
-			stopArray.add(cursorToStop(mCursor));
-			mCursor.moveToNext();
-		}
-		
-		return stopArray;
-	}
-	
-	/**
-	 * converts one cursor to a stop
-	 * @param mCursor
-	 * @return
-	public Stop cursorToStop(Cursor mCursor) {
-		if (mCursor.isBeforeFirst() || mCursor.isAfterLast())
-			return null;	
-		Stop mStop = new Stop(
-				mCursor.getInt(0),
-				mCursor.getString(1),
-				mCursor.getInt(2),
-				mCursor.getInt(3),
-				(mCursor.getInt(4) == 1));
-		return mStop;
-	}
 
 **/	
 }
