@@ -13,11 +13,11 @@
 	<uses-sdk android:minSdkVersion="4"></uses-sdk>
 	
 	
-    <application android:name="com.islamsharabash.cumtd.cumtdApplication"
+    <application android:name="com.islamsharabash.cumtd.CumtdApplication"
 			     android:icon="@drawable/icon"
 			     android:label="@string/app_name">
 			     
-       <activity android:name=".cumtd"
+       <activity android:name=".CumtdTabsActivity"
                  android:label="@string/app_name"
                  android:theme="@android:style/Theme.NoTitleBar">
                   

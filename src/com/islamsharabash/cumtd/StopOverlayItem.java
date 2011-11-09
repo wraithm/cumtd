@@ -4,7 +4,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 
 public class StopOverlayItem extends OverlayItem {
-	public Stop stop = null;
+	private Stop stop;
 	
 	// never use this
 	public StopOverlayItem(GeoPoint point, String title, String snippet) {
@@ -19,5 +19,9 @@ public class StopOverlayItem extends OverlayItem {
 		  "Tap to see bus times");
 		
 		this.stop = stop;
+	}
+	
+	public Stop getStop() {
+		return stop;
 	}
 };

@@ -17,6 +17,8 @@ public class DatabaseAPI {
 	private static String tableName = "stopTable";
 	private static String name = "_name";
 	private static String favorite = "_favorite";
+	private static String latitude = "_latitude";
+	private static String longitude = "_longitude";
 
 	public static DatabaseAPI getInstance() {
 		if (DatabaseAPI.instance == null) {
@@ -27,7 +29,7 @@ public class DatabaseAPI {
 	}
 	// sets up the database s.t. we can use the api
 	private DatabaseAPI() {
-		DatabaseHelper helper = new DatabaseHelper(cumtdApplication.getAppContext());
+		DatabaseHelper helper = new DatabaseHelper(CumtdApplication.getAppContext());
 		try {
 			helper.createDatabase();
 		} catch (IOException e) {
@@ -39,31 +41,38 @@ public class DatabaseAPI {
 		database = helper.getDatabase();
 	}
 
+	public List<Stop> getQuery(String query) {
+		Cursor cursor = database.rawQuery(query, null);
+		List<Stop> stops = cursorToStopList(cursor);
+		cursor.close();
+		return stops;
+	}
 	
 	// get list of stops by search string (checks for empty too)
 	public List<Stop> getStops(String search) {
-		String query = "SELECT * from " + DatabaseAPI.tableName +
-					   " WHERE " + DatabaseAPI.name +
+		String query = "SELECT * from " + tableName +
+					   " WHERE " + name +
 					   " LIKE '%" + search + "%'";
-		Cursor cursor = database.rawQuery(query, null);
-		return cursorToStopList(cursor);
+		return getQuery(query);
 	}
 	
 	// set a stop as a favorite
 
 	// get favorite stops
 	public List<Stop> getFavoriteStops() {
-		String selection = DatabaseAPI.favorite + " > 0";
-		Cursor cursor = database.query(DatabaseAPI.tableName,
-									   null, // all columns 
-									   selection,
-									   null, null, null, null);
-		return cursorToStopList(cursor);
+		String query = "SELECT * from " + tableName +
+					   " WHERE " + favorite + " > 0";
+		return getQuery(query);
 	}
 	
-	// get longitude and latitude for stop (needed???)
-	
-	// get stops within certain lat/long bound
+	public List<Stop> getStopsWithin(int upper_lat, int lower_lat, int upper_long, int lower_long) {
+		String query = "SELECT * from " + tableName +
+					   " WHERE " + latitude +
+					   " BETWEEN " + Integer.toString(lower_lat) + " AND " + Integer.toString(upper_lat) +
+					   " AND " +
+					    longitude + " BETWEEN " + Integer.toString(lower_long) + " AND " + Integer.toString(upper_long);
+		return getQuery(query);
+	}
 	
 	private List<Stop> cursorToStopList(Cursor cursor) {
 		List<Stop> stops = new ArrayList<Stop>();

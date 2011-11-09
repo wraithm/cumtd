@@ -1,22 +1,11 @@
 package com.islamsharabash.cumtd;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
 import com.google.android.maps.*;
-import com.islamsharabash.cumtd.StopMapView.StopMapListener;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
+import com.islamsharabash.cumtd.TouchMapView.TouchMapListener;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.util.Log;
 import android.widget.Toast;
 
 public class NearbyStopsActivity extends MapActivity {
@@ -25,15 +14,14 @@ public class NearbyStopsActivity extends MapActivity {
 	Drawable busDrawable;
 	Drawable clusterDrawable;
 	
-	StopItemizedOverlay stopOverlay;
 	
-//	final DataBaseHelper db = new DataBaseHelper(NearbyStopsActivity.this);
-	MyMap myMap = null;
-	MyLocationOverlay myLocation = null;
-	MapController mapController = null;
-	StopMapView stopMapView = null;
-	ImageButton myLocBtn = null;
-
+	DatabaseAPI db = DatabaseAPI.getInstance();
+	TouchMapView touchMap;
+	
+	// approx location is green and wright
+	int START_LAT = 40109995;
+	int START_LONG = -88229110;
+	int START_ZOOM = 16;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,28 +30,21 @@ public class NearbyStopsActivity extends MapActivity {
 			
 			// setup the mapView, button, and my location
 
-			myMap = (MyMap) findViewById(R.id.mymap);
+			touchMap = (TouchMapView) findViewById(R.id.touchmap);
 			
-			myLocBtn = myMap.getLocBtn();
-			myLocBtn.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					showNearStops();
-				}
-			});
+			touchMap.setListener(listener);
 			
-			stopMapView = myMap.getStopMap();	
-			stopMapView.addStopMapListener(mListener);
+			// set init position
+			MapController controller = touchMap.getController();
+			controller.setCenter(new GeoPoint(START_LAT, START_LONG));
+			controller.setZoom(16);
 			
-			mapController = stopMapView.getController();
-			stopMapView.setBuiltInZoomControls(true);
-			myLocation = new MyLocationOverlay(this, stopMapView);
-						
-			mapOverlays = stopMapView.getOverlays();
+			touchMap.setBuiltInZoomControls(true);
+			
+			mapOverlays = touchMap.getOverlays();
 			
 			busDrawable = this.getResources().getDrawable(R.drawable.bus);
 			clusterDrawable = this.getResources().getDrawable(R.drawable.buscluster);
-			
 	    }
 
 	
@@ -72,119 +53,67 @@ public class NearbyStopsActivity extends MapActivity {
 	 * @param lng the longitude span we want to draw stops for
 	 * @param g a geopoint with where we want to center our stops around
 	 */
-	private void drawStops(int lat, int lng, GeoPoint g) {
+	private void drawStops() {
+		GeoPoint center = touchMap.getMapCenter();
+		int lat_span = touchMap.getLatitudeSpan();
+		int long_span = touchMap.getLongitudeSpan();
 		
-		// does a bounds search to see how many stops are within bounds
-		/**
-		Cursor mCursor = db.boundStops(
-				g.getLatitudeE6() + (lat/2),
-				g.getLatitudeE6() - (lat/2),
-				g.getLongitudeE6() + (lng/2),
-				g.getLongitudeE6() - (lng/2));
-				**/
+		int lat_lower = center.getLatitudeE6() - (lat_span/2);
+		int lat_upper = center.getLatitudeE6() + (lat_span/2);
+		int long_lower = center.getLongitudeE6() - (long_span/2);
+		int long_upper = center.getLongitudeE6() + (long_span/2);
 		
-		stopOverlay = new StopItemizedOverlay(busDrawable, stopMapView);
+		List<Stop> stops = db.getStopsWithin(lat_upper, lat_lower, long_upper, long_lower);
+		Log.d("STOPS", Integer.toString(stops.size()));
+		
+		if (stops.size() == 0) {
+			return;
+		}
+		
+		StopItemizedOverlay stopOverlays = new StopItemizedOverlay(busDrawable, touchMap);
 		
 		mapOverlays.clear();
-		stopMapView.postInvalidate();
+		touchMap.postInvalidate();
 	
-		/**
-		if (mCursor.getCount() > 25) {
+		if (stops.size() > 25) {
 			Toast.makeText(getBaseContext(), "Zoom in to see stops", 75).show();
-			mCursor.close();
-		} else {
-			addStops(mCursor);
+			return;
 		}
-	**/	
 		
-		if (stopOverlay.size() != 0)
-			mapOverlays.add(stopOverlay);
+		// add overlays
+		for (Stop stop : stops) {
+			StopOverlayItem stop_item = new StopOverlayItem(stop);
+			stopOverlays.addOverlay(stop_item);
+		}
+		mapOverlays.add(stopOverlays);
 	}
 	
-
-	private StopMapListener mListener = new StopMapListener() {
-
+	private TouchMapListener listener = new TouchMapListener() {
 		@Override
-		public void onMapPan(int lat, int lng, GeoPoint g) {
-			drawStops(lat, lng, g);
-			mapOverlays.add(myLocation);
+		public void onMapPan() {
+			drawStops();
 		}
 	
 		@Override
-		public void onZoomChange(int lat, int lng, GeoPoint g) {
-			drawStops(lat, lng, g);
-			mapOverlays.add(myLocation);
+		public void onZoomChange() {
+			drawStops();
 		}
-
 	};
 
-	
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
 
-	
-	/**
-	 * @param mCursor cursor of stops that you want added
-	 */
-	private void addStops (Cursor mCursor) {
-		
-		// add it to the map
-//			ArrayList<Stop> mStops = db.allCursorToStops(mCursor);
-		/**
-			for(int i = 0; i < mStops.size(); i++){
-				Stop mStop =  (Stop) mStops.get(i);
-				StopOverlayItem myStopItem = new StopOverlayItem(mStop);
-				stopOverlay.addOverlay(myStopItem);
-			}
-			**/
-			
-			stopOverlay.populateIt();
-			mCursor.close();
-	}
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		myLocation.enableMyLocation();
-		drawStops(stopMapView.getLongitudeSpan(),
-				stopMapView.getLongitudeSpan(),
-				stopMapView.getMapCenter());
+		//drawStops();
 	}
 	
-	private void showNearStops() {
-		GeoPoint mLocation = null;
-		
-		mLocation = myLocation.getMyLocation();
-		
-		if (mLocation == null) {
-
-			LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-			Location lastKnownLoc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-			if (lastKnownLoc != null){
-				int longTemp = (int)(lastKnownLoc.getLongitude()* 1000000);
-				int latTemp = (int)(lastKnownLoc.getLatitude() * 1000000);
-				mLocation =  new GeoPoint(latTemp, longTemp);
-			}
-		}
-		
-		if (mLocation != null) {
-			mapController.animateTo(mLocation);
-			mapController.zoomToSpan(2169, 2839);
-			drawStops(stopMapView.getLatitudeSpan(), stopMapView.getLongitudeSpan(), mLocation);
-			mapOverlays.add(myLocation);
-		} else {
-			Toast.makeText(getBaseContext(), "Your location could not be found", 75).show();
-		}
-	}
-	  
-	  
 	@Override
 	protected void onPause() {
 		super.onPause();
-		myLocation.disableMyLocation();
 	}
 
 	

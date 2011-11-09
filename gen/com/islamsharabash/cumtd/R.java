@@ -43,11 +43,10 @@ public final class R {
         public static final int balloon_main_layout=0x7f060000;
         public static final int close_img_button=0x7f060004;
         public static final int loading=0x7f060007;
-        public static final int mylocationbtn=0x7f06000b;
-        public static final int mymap=0x7f06000c;
-        public static final int star=0x7f06000e;
-        public static final int stopmapview=0x7f06000a;
-        public static final int text=0x7f06000d;
+        public static final int mainlayout=0x7f06000a;
+        public static final int star=0x7f06000d;
+        public static final int text=0x7f06000c;
+        public static final int touchmap=0x7f06000b;
     }
     public static final class layout {
         public static final int balloon_overlay=0x7f030000;
@@ -55,9 +54,8 @@ public final class R {
         public static final int favorites=0x7f030002;
         public static final int lookupstops=0x7f030003;
         public static final int main=0x7f030004;
-        public static final int mymap=0x7f030005;
-        public static final int nearbystops=0x7f030006;
-        public static final int stop_list_item=0x7f030007;
+        public static final int nearbystops=0x7f030005;
+        public static final int stop_list_item=0x7f030006;
     }
     public static final class string {
         public static final int API_KEY=0x7f050005;

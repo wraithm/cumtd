@@ -12,44 +12,39 @@ import com.google.android.maps.*;
 
 public class StopItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 
-	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
-	private Context mContext = null;
+	private ArrayList<OverlayItem> overlays = new ArrayList<OverlayItem>();
+	private Context context;
 	
 	public StopItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 		super(boundCenter(defaultMarker), mapView);
-		mContext = mapView.getContext();
+		context = mapView.getContext();
 	}
 	
 	@Override
 	protected boolean onBalloonTap(int index) {
 		
-		 Intent i = new Intent(mContext, DisplaySearchResults.class);
-    	 Bundle stopBundle = new Bundle();
-    	 Stop mStop = ((StopOverlayItem) mOverlays.get(index)).stop;
-         stopBundle.putSerializable("stop", mStop);
+		 Intent display_results = new Intent(context, DisplaySearchResults.class);
+    	 Bundle bundle = new Bundle();
+    	 Stop stop = ((StopOverlayItem) overlays.get(index)).getStop();;
+         bundle.putSerializable("stop", stop);
 
-         i.putExtra("com.islamsharabash.cumtd.stop", stopBundle);
-         mContext.startActivity(i);
+         display_results.putExtra("com.islamsharabash.cumtd.stop", bundle);
+         context.startActivity(display_results);
 		return true;
 	}
 
 	public void addOverlay(OverlayItem overlay) {
-	    mOverlays.add(overlay);
+	    overlays.add(overlay);
+		populate();
 	}
 	
 	@Override
 	protected OverlayItem createItem(int i) {
-		return mOverlays.get(i);
+		return overlays.get(i);
 	}
 
 	@Override
 	public int size() {
-		return mOverlays.size();
+		return overlays.size();
 	}
-	
-	public void populateIt() {
-		populate();
-	}
-	
-	
 }

@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-  xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/mainlayout"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" >
   
-	<com.islamsharabash.cumtd.MyMap
-		android:id="@+id/mymap"
+	<com.islamsharabash.cumtd.TouchMapView
+		android:id="@+id/touchmap"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:apiKey="06f9Ysk9NyGIfuaUt94RL4a70OBRYaZr7Xf7t7g"/>
 
-</merge>
+</RelativeLayout>
