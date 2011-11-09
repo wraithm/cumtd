@@ -206,28 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		return boundStops(latUpper, latLower, longUpper, longLower);
 	}
-	
-	/**
-	 * returns cursor of stops within the bounds specified
-	 * @param longUpper
-	 * @param longLower
-	 * @param latUpper
-	 * @param latLower
-	 * @return
-	public Cursor boundStops(int latUpper, int latLower, int longUpper, int longLower) {
-		
-		String query = "SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-						LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
-						" WHERE " + LATITUDE + " BETWEEN " + Integer.toString(latLower) +
-						" AND " + Integer.toString(latUpper) +
-						" INTERSECT " +
-						"SELECT " + STOP_ID + ", " + NAME + ", " + LATITUDE + ", " +
-						LONGITUDE + ", " + FAVORITE + ", " + KEY_ID + " FROM " + STOP_TABLE + 
-						" WHERE " + LONGITUDE + " BETWEEN " + Integer.toString(longLower) +
-						" AND " + Integer.toString(longUpper);
-		
-		return database.rawQuery(query, new String[] {});
-	}
+}
 	
 	/**
 	 * sets the stop specified by _rowIndex as not a favorite
