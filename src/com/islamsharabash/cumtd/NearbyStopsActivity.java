@@ -12,8 +12,6 @@ public class NearbyStopsActivity extends MapActivity {
 	
 	List<Overlay> mapOverlays;
 	Drawable busDrawable;
-	Drawable clusterDrawable;
-	
 	
 	DatabaseAPI db = DatabaseAPI.getInstance();
 	TouchMapView touchMap;
@@ -44,7 +42,6 @@ public class NearbyStopsActivity extends MapActivity {
 			mapOverlays = touchMap.getOverlays();
 			
 			busDrawable = this.getResources().getDrawable(R.drawable.bus);
-			clusterDrawable = this.getResources().getDrawable(R.drawable.buscluster);
 	    }
 
 	

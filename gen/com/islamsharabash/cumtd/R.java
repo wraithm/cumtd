@@ -25,12 +25,11 @@ public final class R {
         public static final int btn_star_big_on=0x7f020007;
         public static final int btn_star_big_on_pressed=0x7f020008;
         public static final int bus=0x7f020009;
-        public static final int buscluster=0x7f02000a;
-        public static final int ic_btn_search=0x7f02000b;
-        public static final int ic_dialog_map=0x7f02000c;
-        public static final int ic_menu_mylocation=0x7f02000d;
-        public static final int ic_menu_myplaces=0x7f02000e;
-        public static final int icon=0x7f02000f;
+        public static final int ic_btn_search=0x7f02000a;
+        public static final int ic_dialog_map=0x7f02000b;
+        public static final int ic_menu_mylocation=0x7f02000c;
+        public static final int ic_menu_myplaces=0x7f02000d;
+        public static final int icon=0x7f02000e;
     }
     public static final class id {
         public static final int RefreshButton=0x7f060006;
