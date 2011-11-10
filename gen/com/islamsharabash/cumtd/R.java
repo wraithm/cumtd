@@ -57,11 +57,8 @@ public final class R {
         public static final int stop_list_item=0x7f030006;
     }
     public static final class string {
-        public static final int API_KEY=0x7f050005;
-        public static final int app_name=0x7f050002;
-        public static final int help=0x7f050003;
-        public static final int load=0x7f050004;
-        public static final int refresh=0x7f050000;
-        public static final int search=0x7f050001;
+        public static final int API_KEY=0x7f050001;
+        public static final int API_URL=0x7f050002;
+        public static final int app_name=0x7f050000;
     }
 }

@@ -28,6 +28,11 @@ public class Stop implements Serializable {
 	public String getName() {
 		return name;
 	}
+	
+	public String getID() {
+		return stopID;
+	}
+	
 	public int getLatitude() {
 		return latitude;
 	}

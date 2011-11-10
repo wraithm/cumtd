@@ -69,8 +69,8 @@ public class DatabaseAPI {
 		String query = "SELECT * from " + tableName +
 					   " WHERE " + latitude +
 					   " BETWEEN " + Integer.toString(lower_lat) + " AND " + Integer.toString(upper_lat) +
-					   " AND " +
-					    longitude + " BETWEEN " + Integer.toString(lower_long) + " AND " + Integer.toString(upper_long);
+					   " AND " + longitude +
+					   " BETWEEN " + Integer.toString(lower_long) + " AND " + Integer.toString(upper_long);
 		return getQuery(query);
 	}
 	

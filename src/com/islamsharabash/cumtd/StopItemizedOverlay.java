@@ -22,14 +22,13 @@ public class StopItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 	
 	@Override
 	protected boolean onBalloonTap(int index) {
-		
-		 Intent display_results = new Intent(context, DisplaySearchResults.class);
-    	 Bundle bundle = new Bundle();
-    	 Stop stop = ((StopOverlayItem) overlays.get(index)).getStop();;
-         bundle.putSerializable("stop", stop);
+		Intent display_results = new Intent(context, DisplaySearchResults.class);
+		Bundle bundle = new Bundle();
+    	Stop stop = ((StopOverlayItem) overlays.get(index)).getStop();;
+        bundle.putSerializable("stop", stop);
 
-         display_results.putExtra("com.islamsharabash.cumtd.stop", bundle);
-         context.startActivity(display_results);
+        display_results.putExtra("com.islamsharabash.cumtd.stop", bundle);
+        context.startActivity(display_results);
 		return true;
 	}
 

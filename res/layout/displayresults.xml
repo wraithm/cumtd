@@ -11,7 +11,7 @@
 		android:layout_width="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:id="@+id/RefreshButton"
-		android:text="@string/refresh"
+		android:text="Refresh"
 		android:layout_marginTop="25px"></Button>
 	
 	<ProgressBar

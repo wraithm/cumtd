@@ -9,107 +9,76 @@ package com.islamsharabash.cumtd;
  * 		a button next to the time to view the route... maybe the bus icon? (should be w/e route icon is)
  */
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.content.Context;
 import android.content.Intent;
 
 
 public class DisplaySearchResults extends Activity {
 
-	final Context ctx = this;
-	Stop cStop = null;
-	ProgressBar loading = null;
-	TextView resultsTV = null;
-	
-	//Create handler for UI updates
-	Handler UIHandler = new Handler(){
-	@Override
-	public void handleMessage(Message msg){
-		super.handleMessage(msg);
-		
-		Bundle resultsBundle = msg.getData();
-		String results = resultsBundle.getString("results");
-		loading.setVisibility(4);
-		///message stuff
-    	resultsTV.setText(cStop.getName()+"\n"+results);		
-	}
-	};
+	ProgressBar loadingBar;
+	TextView resultsView;
+	Stop stop;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		//Set the view
 		setContentView(R.layout.displayresults);
-    	
-    	//get the intent, and open up the bundle
-		Intent i = this.getIntent();
-		Bundle stopBundle = i.getBundleExtra("com.islamsharabash.cumtd.stop");
-		cStop = (Stop) stopBundle.getSerializable("stop");
-		loading = (ProgressBar) findViewById(R.id.loading);
-		resultsTV = (TextView) findViewById(R.id.ResultsTextView01);
-		resultsTV.setMovementMethod(new ScrollingMovementMethod());
 		
-		loading.setVisibility(4);
-		getResults();
-     
+		initUI();
+		
+		// get stop info
+		Intent intent = this.getIntent();
+		Bundle stopBundle = intent.getBundleExtra("com.islamsharabash.cumtd.stop");
+		stop = (Stop) stopBundle.getSerializable("stop");
+		
+		// start an async request for results (also updates ui)
+		new GetBusTimes().execute(stop);
+	}
+	
+	private void initUI() {
+		loadingBar = (ProgressBar) findViewById(R.id.loading);
+		resultsView = (TextView) findViewById(R.id.ResultsTextView01);
+		resultsView.setMovementMethod(new ScrollingMovementMethod());
+		
         //Refresh functionality
-    	final Button button = (Button) findViewById(R.id.RefreshButton);
+    	Button button = (Button) findViewById(R.id.RefreshButton);
     	button.setOnClickListener(new View.OnClickListener() {
     		@Override
 			public void onClick(View v) {
-    			getResults();
+				new GetBusTimes().execute(stop);
     		}
     	});
-        	
-	}//close onCreate
-	
-	private void getResults() {
-    	loading.setVisibility(0);
-//    	cStop.results.clear();
-		new Search().execute();
 	}
-
 	
-	private class Search extends AsyncTask<Void, Void, Void> {
-		@Override
-		protected Void doInBackground(Void... params) {
-//			CumtdSearch searchObject = new CumtdSearch(cStop, ctx);
-//			searchObject.getTimes();
-			
-			String allResults = "";
-			
-			/**
-			for (Iterator<Bus> it = cStop.results.iterator(); it.hasNext(); ) {
-				allResults += it.next().toString() + "\n";
-			}
-			**/
-
-			updateUI(allResults);
-
-			return null;
+	// sets the loading, gets the search results, and displays them
+	// the third param (string) for asynctask is the type passed to onpostexecute
+	private class GetBusTimes extends AsyncTask<Stop, Void, String> {
+		protected void onPreExecute() {
+			loadingBar.setVisibility(View.VISIBLE);
 		}
-
-	}//end Search
-	
-	private void updateUI(String results){
-
-		//create a bundle with data, a message with the UIHandler, and send it
-		Bundle resultsBundle = new Bundle();
-		resultsBundle.putString("results", results);
-		Message resultsMessage = Message.obtain(UIHandler);
-		resultsMessage.setData(resultsBundle);
-		resultsMessage.sendToTarget();
-	}//end updateUI
-	
-	
+		
+		@Override
+		protected String doInBackground(Stop... params) {
+			CumtdAPI api = new CumtdAPI();
+			try {
+				return api.getDeparturesByStop(stop);
+			} catch (IOException e1) {
+				return "Connection error";
+			}
+		}
+		
+		protected void onPostExecute(String result) {
+	    	resultsView.setText(stop.getName() + "\n" + result);		
+			loadingBar.setVisibility(View.INVISIBLE);
+		}
+	}
 }
