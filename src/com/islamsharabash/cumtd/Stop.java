@@ -45,6 +45,13 @@ public class Stop implements Serializable {
 		return favorite;
 	}
 	
+	// toggles favorite and sets db
+	public void toggleFavorite() {
+		favorite = !favorite;
+		DatabaseAPI db = DatabaseAPI.getInstance();
+		db.setFavorite(this, favorite);
+	}
+	
 	public String toString() {
 		return stopID + " " + name + "; lat:" + latitude + "; lng:" + longitude + "; fav:" + favorite;
 	}

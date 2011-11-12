@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	private static String DB_NAME = "cumtdDB.db";
 	private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
     
-	private static final int VERSION = 5;
+	private static final int VERSION = 6;
 	private SQLiteDatabase database; 
 	private final Context context;
 	 

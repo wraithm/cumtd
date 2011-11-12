@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.*;
 
 
@@ -12,10 +14,12 @@ import android.widget.*;
 public class StopAdapter extends BaseAdapter implements ListAdapter {
 	
 	private List<Stop> stops = new ArrayList<Stop>();
-	private LayoutInflater inflater = null;
+	private LayoutInflater inflater;
+	private Context context;
 	
 	public StopAdapter(Context context) {
-		inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(context);
+		this.context = context;
 	}
 	
 	public void setStops(List<Stop> stops) {
@@ -50,8 +54,13 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
             holder.text = (TextView) convertView.findViewById(R.id.text);
             holder.star = (CheckBox) convertView.findViewById(R.id.star);
             
+            // set click listeners
+            convertView.setOnClickListener(itemListener);
+            holder.star.setOnClickListener(favoriteListener);
+            
             convertView.setTag(holder);
 		} else {
+			Log.d("RECYCLE", "recycling view");
 	        holder = (ViewHolder) convertView.getTag();
 		}
 		
@@ -59,6 +68,7 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
 		Stop stop = this.stops.get(position);
 		holder.text.setText(stop.getName());
 		holder.star.setChecked(stop.isFavorite());
+		holder.position = position;
 		
 		return convertView;
 	}
@@ -66,7 +76,28 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
 	static class ViewHolder {
 	    TextView text;
 	    CheckBox star;
+	    int position;
 	}
+	
+	private OnClickListener itemListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+	        ViewHolder holder = (ViewHolder) view.getTag();
+			Stop stop = stops.get(holder.position);
+			DeparturesActivity.launchForStop(stop, context);
+		}
+	};
+	
+	private OnClickListener favoriteListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+	        ViewHolder holder = (ViewHolder) view.getTag();
+			Stop stop = stops.get(holder.position);
+			
+			stop.toggleFavorite();
+			holder.star.setChecked(stop.isFavorite());
+		}
+	};
 
 	/**
 

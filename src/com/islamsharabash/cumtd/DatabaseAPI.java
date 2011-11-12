@@ -15,6 +15,7 @@ public class DatabaseAPI {
 	private static DatabaseAPI instance = null;
 	private SQLiteDatabase database; 
 	private static String tableName = "stopTable";
+	private static String stopID = "_stop";
 	private static String name = "_name";
 	private static String favorite = "_favorite";
 	private static String latitude = "_latitude";
@@ -56,7 +57,13 @@ public class DatabaseAPI {
 		return getQuery(query);
 	}
 	
-	// set a stop as a favorite
+	// set a stop.favorite as isFavorite
+	public void setFavorite(Stop stop, boolean isFavorite) {
+		String query = "UPDATE OR ABORT " + tableName +
+					    " SET " + favorite + " = " + isFavorite +
+					    " WHERE " + stopID + " = " + stop.getID();
+		
+	}
 
 	// get favorite stops
 	public List<Stop> getFavoriteStops() {
@@ -80,11 +87,11 @@ public class DatabaseAPI {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			stops.add(new Stop(
-				cursor.getString(2), // stop_id
-				cursor.getString(3), // stop name
-				cursor.getInt(4), // latitude
-				cursor.getInt(5), // longitude
-				(cursor.getInt(1) > 0) // favorite
+				cursor.getString(1), // stop_id
+				cursor.getString(2), // stop name
+				cursor.getInt(3), // latitude
+				cursor.getInt(4), // longitude
+				(cursor.getInt(5) > 0) // favorite
 			));
 			cursor.moveToNext();
 		}
