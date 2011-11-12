@@ -134,6 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     	    super.close();
 	}
     
+    //TODO(ibash): verify this actually works before placing on market!
 	/**
 	 * onUpgrade upgrades from an old db to a new db
 	 */
@@ -168,62 +169,4 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 			e.printStackTrace();
 		}
 	}
-	
-	
-//TODO(ibash) remove the code below, it's going into DatabaseAPI	
-	
-	
-	/**
-	 * Sets the specified stop as a favorite
-	 * @param _stop
-	 * @return true if setting the favorite succeeded, else false
-	 * @throws MalformedStop
-	public boolean setFavorite(Stop _stop) {
-		ContentValues newValues = new ContentValues();
-		newValues.put(FAVORITE, 1);		
-		if ((database.update(STOP_TABLE,
-								newValues,
-								STOP_ID + " = ?",
-								new String[] {Integer.toString(_stop.getStopID())})) == 1)
-			return true;
-		
-		else return false;			
-	}
-
-	/**
-	 * returns a cursor with stops with the bounding box of the distance
-	 * set out by the mile multiplier d
-	 * 
-	 * @param lat
-	 * @param lng
-	 * @param d
-	 * @return
-	public Cursor nearStops(int lat, int lng, double d) {
-		int latUpper = (int) (lat + (14460 * d));
-		int latLower  = (int) (lat - (14460 * d));
-		int longUpper = (int) (lng + (18926 * d));
-		int longLower = (int) (lng - (18926 * d));
-		
-		return boundStops(latUpper, latLower, longUpper, longLower);
-	}
-}
-	
-	/**
-	 * sets the stop specified by _rowIndex as not a favorite
-	 * @param _rowIndex
-	 * @return true if succeeded, else false
-	public boolean removeFavorite(Stop _stop) {
-		ContentValues newValues = new ContentValues();
-		newValues.put(FAVORITE, 0);		
-		if ((database.update(STOP_TABLE,
-								newValues,
-								STOP_ID + " = ?",
-								new String[] {Integer.toString(_stop.getStopID())})) == 1)
-			return true;
-		
-		else return false;			
-	}
-
-
-**/	
 }

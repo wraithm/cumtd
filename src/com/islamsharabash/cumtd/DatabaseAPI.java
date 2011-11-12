@@ -59,10 +59,11 @@ public class DatabaseAPI {
 	
 	// set a stop.favorite as isFavorite
 	public void setFavorite(Stop stop, boolean isFavorite) {
+		int is_fav = (isFavorite ? 1 : 0);
 		String query = "UPDATE OR ABORT " + tableName +
-					    " SET " + favorite + " = " + isFavorite +
-					    " WHERE " + stopID + " = " + stop.getID();
-		
+					    " SET " + favorite + " = " + Integer.toString(is_fav) +
+					    " WHERE " + stopID + " = '" + stop.getID() + "'";
+		database.execSQL(query);
 	}
 
 	// get favorite stops

@@ -91,46 +91,13 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
 	private OnClickListener favoriteListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-	        ViewHolder holder = (ViewHolder) view.getTag();
+			// get the parent view
+			RelativeLayout parent_view = (RelativeLayout) view.getParent();
+	        ViewHolder holder = (ViewHolder) parent_view.getTag();
 			Stop stop = stops.get(holder.position);
 			
 			stop.toggleFavorite();
-			holder.star.setChecked(stop.isFavorite());
+			//holder.star.setChecked(stop.isFavorite());
 		}
 	};
-
-	/**
-
-	public View getView(int position, View convertView, ViewGroup parent) {
-       
-        holder.FavoriteCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					db.setFavorite(holder.stop);
-				} else {
-					db.removeFavorite(holder.stop);
-				}
-				if (ACTIVITY == cumtd.FAVORITESACTIVITY) {
-					getCursor().requery();
-					notifyDataSetChanged();
-					LookupStopsActivity.updateList = true;
-				}
-			}
-        });
-        
-        convertView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				 Intent i = new Intent(v.getContext(), DisplaySearchResults.class);
-		    	 Bundle stopBundle = new Bundle();
-		         stopBundle.putSerializable("stop", holder.stop);
-		         i.putExtra("com.islamsharabash.cumtd.stop", stopBundle);
-		         v.getContext().startActivity(i);
-			} 	
-        });
-        
-        return convertView;
-    }
-    **/
 }
