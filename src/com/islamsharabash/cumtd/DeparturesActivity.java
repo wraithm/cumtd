@@ -19,10 +19,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.content.Context;
 import android.content.Intent;
 
 
-public class DisplaySearchResults extends Activity {
+public class DeparturesActivity extends Activity {
 
 	ProgressBar loadingBar;
 	TextView resultsView;
@@ -31,7 +32,7 @@ public class DisplaySearchResults extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.displayresults);
+		setContentView(R.layout.departures);
 		
 		initUI();
 		
@@ -80,5 +81,14 @@ public class DisplaySearchResults extends Activity {
 	    	resultsView.setText(stop.getName() + "\n" + result);		
 			loadingBar.setVisibility(View.INVISIBLE);
 		}
+	}
+	
+	public static void launchForStop(Stop stop, Context context) {
+		Intent display_results = new Intent(context, DeparturesActivity.class);
+		Bundle bundle = new Bundle();
+        bundle.putSerializable("stop", stop);
+
+        display_results.putExtra("com.islamsharabash.cumtd.stop", bundle);
+        context.startActivity(display_results);
 	}
 }
