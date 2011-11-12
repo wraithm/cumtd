@@ -34,7 +34,6 @@ public class DatabaseAPI {
 		try {
 			helper.createDatabase();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			Log.e("create database", "unable to create database");
 			e.printStackTrace();
 		}
