@@ -4,7 +4,7 @@
  android:id="@+id/RelativeLayout01"
   xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_height="fill_parent"
-   android:layout_width="fill_parent">
+   android:layout_width="fill_parent" android:background="#fff">
 
 	<Button
 		android:layout_height="wrap_content"
@@ -29,9 +29,7 @@
 		android:layout_below="@+id/RefreshButton"
 		android:scrollbars="vertical"
 		android:maxLines="21"
-		android:textColor="#FFF"
-		android:textSize="16sp"
-		android:id="@+id/ResultsTextView01"></TextView>
+		android:id="@+id/ResultsTextView01" android:textColor="#000" android:textSize="18sp"></TextView>
 </RelativeLayout>
 
 

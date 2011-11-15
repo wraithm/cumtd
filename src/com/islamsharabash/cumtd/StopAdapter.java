@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
@@ -60,7 +59,6 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
             
             convertView.setTag(holder);
 		} else {
-			Log.d("RECYCLE", "recycling view");
 	        holder = (ViewHolder) convertView.getTag();
 		}
 		

@@ -5,7 +5,6 @@ import com.google.android.maps.*;
 import com.islamsharabash.cumtd.TouchMapView.TouchMapListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 public class NearbyStopsActivity extends MapActivity {
@@ -61,7 +60,6 @@ public class NearbyStopsActivity extends MapActivity {
 		int long_upper = center.getLongitudeE6() + (long_span/2);
 		
 		List<Stop> stops = db.getStopsWithin(lat_upper, lat_lower, long_upper, long_lower);
-		Log.d("STOPS", Integer.toString(stops.size()));
 		
 		if (stops.size() == 0) {
 			return;

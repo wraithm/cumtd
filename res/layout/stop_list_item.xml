@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/list_item"
-	android:layout_height="fill_parent"
-	android:layout_width="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+	android:background="#fff">
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true"
 		android:text="Name"
-		android:textColor="#FFF"
-		android:textSize="18sp"
 		android:textStyle="bold"
-		android:id="@+id/text"/>
+		android:id="@+id/text"
+		android:textColor="#405155"
+		android:textSize="20sp"
+		android:layout_toLeftOf="@+id/star"/>
 
 	
 	<CheckBox
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
 		android:button="@drawable/btn_star"
-		android:id="@+id/star"/>
+		android:id="@+id/star"
+		android:layout_height="fill_parent"
+		android:layout_alignParentTop="true"/>
 
 </RelativeLayout>

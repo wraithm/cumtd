@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="StopList">
+		<item name="android:layout_width">fill_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+    	<item name="android:layout_below">@+id/StopEditText</item>
+    	<item name="android:id">@id/android:list</item>
+    	<item name="android:layout_marginTop">25px</item>
+    	<item name="android:dividerHeight">2px</item>
+    	<item name="android:divider">#405155</item>
+	</style>
+</resources>

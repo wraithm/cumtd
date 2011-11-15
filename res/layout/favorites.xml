@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+  android:layout_height="fill_parent"
+  android:background="#fff" xmlns:android="http://schemas.android.com/apk/res/android">
 
-      <ListView
-     	android:layout_width="fill_parent"
-     	android:layout_height="wrap_content"
-     	android:layout_below="@+id/StopEditText"
-     	android:id="@id/android:list"
-     	android:layout_marginTop="25px"></ListView>
+    <ListView style="@style/StopList" />
      	
-	<TextView android:id="@id/android:empty"
+	<TextView
+		android:id="@id/android:empty"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:text="No favorites"
