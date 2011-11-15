@@ -1,6 +1,8 @@
 package com.islamsharabash.cumtd;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -17,32 +19,27 @@ import android.content.res.Resources;
 public class CumtdAPI {
 	Resources res = CumtdApplication.getAppContext().getResources();
 	
-	public String getDeparturesByStop(Stop stop) throws IOException {
+	public List<Departure> getDeparturesByStop(Stop stop) throws Exception {
 		String method = "departures.getListByStop";
 		String params = "?stop_id=" + stop.getID() + "&key=" + res.getString(R.string.API_KEY);
 		String url = res.getString(R.string.API_URL) + method + params;
 		
 		JSONObject json_response = apiRequest(url);
 		
-		return formatDepartures(json_response);
+		return JSONToDepartureList(json_response);
 	}
 	
-	private String formatDepartures(JSONObject json) {
-		try {
-			//TODO(ibash) make this return a well formed array list
-			String response = "";
-			JSONArray departures = json.getJSONArray("departures");
-			for (int i = 0; i < departures.length(); i ++) {
-				JSONObject departure = departures.getJSONObject(i);
-				response += departure.getString("route");
-				response += ": " + departure.getString("expected");
-				response += "\n";
-			}
-			return response;
-		} catch (JSONException e) {
-			e.printStackTrace();
+	private List<Departure> JSONToDepartureList(JSONObject json) throws JSONException {
+		List<Departure> departures =  new ArrayList<Departure>();
+		JSONArray json_departures = json.getJSONArray("departures");
+		for (int i = 0; i < json_departures.length(); i ++) {
+			JSONObject departure = json_departures.getJSONObject(i);
+			departures.add(new Departure(
+				departure.getString("route"),
+				departure.getString("expected")
+			));
 		}
-		return "Connection Error";
+		return departures;
 	}
 	
 	// we're going to throw the IOException all the way to the ui...

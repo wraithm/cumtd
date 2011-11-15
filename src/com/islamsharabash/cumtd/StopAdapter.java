@@ -66,6 +66,9 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
 		Stop stop = this.stops.get(position);
 		holder.text.setText(stop.getName());
 		holder.star.setChecked(stop.isFavorite());
+		
+		// although not part of the view holder pattern, we need it later for 
+		// and onclick (and would normally be stored in the view tag)
 		holder.position = position;
 		
 		return convertView;

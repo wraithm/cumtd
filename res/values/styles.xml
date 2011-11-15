@@ -5,8 +5,11 @@
 	    <item name="android:layout_height">wrap_content</item>
     	<item name="android:layout_below">@+id/StopEditText</item>
     	<item name="android:id">@id/android:list</item>
-    	<item name="android:layout_marginTop">25px</item>
-    	<item name="android:dividerHeight">2px</item>
-    	<item name="android:divider">#405155</item>
+    	<item name="android:paddingTop">10sp</item>
+    	<item name="android:paddingBottom">15sp</item>
+    	<item name="android:paddingLeft">0sp</item>
+    	<item name="android:paddingRight">0sp</item>
+    	<item name="android:dividerHeight">5sp</item>
+    	<item name="android:divider">@color/background</item>
 	</style>
 </resources>
