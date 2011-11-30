@@ -23,7 +23,6 @@ public class CumtdAPI {
 		String method = "GetDeparturesByStop";
 		String params = "?stop_id=" + stop.getID() + "&key=" + res.getString(R.string.API_KEY);
 		String url = res.getString(R.string.API_URL) + method + params;
-		System.out.println(url);
 		
 		JSONObject json_response = apiRequest(url);
 		

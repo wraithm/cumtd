@@ -98,7 +98,6 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
 			Stop stop = stops.get(holder.position);
 			
 			stop.toggleFavorite();
-			//holder.star.setChecked(stop.isFavorite());
 		}
 	};
 }

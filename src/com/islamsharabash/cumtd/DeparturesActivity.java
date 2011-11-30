@@ -1,11 +1,14 @@
 package com.islamsharabash.cumtd;
 
 import java.util.List;
+
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,12 +48,22 @@ public class DeparturesActivity extends ListActivity {
 		TextView stop_name = (TextView) findViewById(R.id.StopName);
     	stop_name.setText(stop.getName());		
 		
-        //Refresh functionality
+        // Refresh functionality
     	ImageButton button = (ImageButton) findViewById(R.id.Refresh);
     	button.setOnClickListener(new View.OnClickListener() {
     		@Override
 			public void onClick(View v) {
 				new GetBusTimes().execute(stop);
+    		}
+    	});
+    	
+    	// Favorite functionality
+    	CheckBox star = (CheckBox) findViewById(R.id.Star);
+		star.setChecked(stop.isFavorite());
+    	star.setOnClickListener(new OnClickListener() {
+    		@Override
+    		public void onClick(View view) {
+    			stop.toggleFavorite();
     		}
     	});
 	}
