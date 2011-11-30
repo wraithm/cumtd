@@ -40,7 +40,6 @@ public class DepartureAdapter extends BaseAdapter implements ListAdapter {
 	// ref: http://developer.android.com/resources/samples/ApiDemos/src/com/example/android/apis/view/List14.html
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
 		ViewHolder holder;
 		
 		// create the view or get references to view components
@@ -60,9 +59,8 @@ public class DepartureAdapter extends BaseAdapter implements ListAdapter {
 		// set data
 		Departure departure = this.departures.get(position);
 		holder.route.setText(departure.getRoute());
-		holder.time.setText(departure.getTimeTilDeparture());
+		holder.time.setText(departure.getTime());
 		
-		holder.route.setTextColor(departure.getRouteColor());
 		holder.time.setTextColor(departure.getTimeColor());
 		
 		return convertView;

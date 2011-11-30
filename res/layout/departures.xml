@@ -21,13 +21,19 @@
 			android:text="Stop"
 			android:layout_weight="10"
 			android:lines="1"
-			android:scrollHorizontally="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="28sp"
 			android:textColor="@color/header_text"
 			android:layout_centerVertical="true"
-			android:ellipsize="end"
+			
+			android:ellipsize="marquee"
+        android:marqueeRepeatLimit ="marquee_forever"
+		android:focusable="true"
+        android:focusableInTouchMode="true" 	
+             android:scrollHorizontally="true"
+        
+        
 			android:layout_toLeftOf="@+id/Star"
 			android:layout_alignParentLeft="true"/>
 
@@ -55,9 +61,11 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/loading"
-		android:visibility="visible" />
+		android:visibility="visible"/>
 	
-	<ListView style="@style/StopList" />
+	<ListView
+		style="@style/StopList"
+		android:layout_below="@+id/Header"/>
 </RelativeLayout>
 
 

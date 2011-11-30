@@ -20,9 +20,10 @@ public class CumtdAPI {
 	Resources res = CumtdApplication.getAppContext().getResources();
 	
 	public List<Departure> getDeparturesByStop(Stop stop) throws Exception {
-		String method = "departures.getListByStop";
+		String method = "GetDeparturesByStop";
 		String params = "?stop_id=" + stop.getID() + "&key=" + res.getString(R.string.API_KEY);
 		String url = res.getString(R.string.API_URL) + method + params;
+		System.out.println(url);
 		
 		JSONObject json_response = apiRequest(url);
 		
@@ -35,8 +36,9 @@ public class CumtdAPI {
 		for (int i = 0; i < json_departures.length(); i ++) {
 			JSONObject departure = json_departures.getJSONObject(i);
 			departures.add(new Departure(
-				departure.getString("route"),
-				departure.getString("expected")
+				departure.getString("headsign"),
+				departure.getInt("expected_mins"),
+				departure.getJSONObject("route").getString("route_color")
 			));
 		}
 		return departures;
@@ -55,7 +57,6 @@ public class CumtdAPI {
 			e.printStackTrace();
 			return null;
 		}
-		
 		try {
 			return (JSONObject) new JSONTokener(json).nextValue();
 		} catch (JSONException e) {

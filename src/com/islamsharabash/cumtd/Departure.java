@@ -1,43 +1,67 @@
 package com.islamsharabash.cumtd;
 
-import android.text.format.Time;
+import android.graphics.Color;
+import android.text.Html;
+import android.text.Spanned;
 
 //TODO this will depend on the new version of the api (to be released within a week of 11/15)
 // TODO hold out for this: http://developer.cumtd.com/forum/default.aspx?g=posts&m=89&#post89
 public class Departure {
 	
 	private String route;
-	private Time time;
+	private int minutes;
+	private String color;
+	private float  LIGHT_OFFSET= .3f;
+	private float SAT_OFFSET = -.15f;
 	
-	// raw time is the time returned by JSON, which is formatted
-	public Departure(String route, String raw_time) {
+	public Departure(String route, int minutes, String color) {
 		this.route = route;
-		this.time = parse(raw_time);
+		this.minutes = minutes;
+		this.color = brightenColor("#" + color);
 	}
 	
-	private Time parse(String raw_time) {
-		//TODO write this function
-		return time;
+	// returns string hex of brightened color
+	private String brightenColor(String str_color) {
+		int color = Color.parseColor(str_color);
+		float[] hsv = new float[3];
+		Color.colorToHSV(color, hsv);
+		
+		hsv[2] = hsv[2] + LIGHT_OFFSET;
+		hsv[1] = hsv[1] + SAT_OFFSET;
+		
+		int new_color = Color.HSVToColor(hsv);
+		
+		return String.format("#%06X", (0xFFFFFF & new_color));
+	}
+
+	// returns string for route name
+	// using html to get perty colors :)
+	public Spanned getRoute() {
+		int index = this.route.indexOf(' ');
+		String code = this.route.substring(0, index);
+		String name = this.route.substring(index, this.route.length());
+		
+		return Html.fromHtml(
+				"<font color=#FFFFFF>" + code + "</font>" +
+				"<font color=" + this.color + ">" + name + "</font>");
 	}
 	
-	// int returned should be a color, maybe use resources?
-	public int getRouteColor() {
-		//TODO implement this
-		return 0;
+	// returns text to display for expected time
+	public String getTime() {
+		if (this.minutes == 0) {
+			return "DUE";
+		}
+		
+		return Integer.toString(this.minutes) + "m";
 	}
 	
-	public String getRoute() {
-		return route;
-	}
-	
-	public String getTimeTilDeparture() {
-		//TODO implement this
-		return "";
-	}
-	
+	// returns the color 
 	public int getTimeColor() {
-		//TODO implement this
-		return 0;
+		if (this.minutes == 0) {
+			return Color.RED;
+		}
+		
+		return Color.WHITE;
 	}
 	
 

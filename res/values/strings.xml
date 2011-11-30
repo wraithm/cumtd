@@ -5,6 +5,6 @@
     
     <string name="app_name">MTD</string>
 <string name="API_KEY">9353bd1b2c2d4f7f814b698d5006be92</string>
-<string name="API_URL">http://developer.cumtd.com/api/v1.0/json/</string>
+<string name="API_URL">http://developer.cumtd.com/api/v2.0/json/</string>
 
 </resources>

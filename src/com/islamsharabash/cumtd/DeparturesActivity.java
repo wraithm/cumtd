@@ -4,6 +4,7 @@ import java.util.List;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 
 
+//TODO make progress bar above list
 public class DeparturesActivity extends ListActivity {
 
 	ProgressBar loadingBar;
@@ -29,6 +31,7 @@ public class DeparturesActivity extends ListActivity {
 		stop = (Stop) stopBundle.getSerializable("stop");
 			
 		adapter = new DepartureAdapter(this);
+		setListAdapter(adapter);
 		
 		initUI();
 		
@@ -61,12 +64,15 @@ public class DeparturesActivity extends ListActivity {
 		}
 		
 		@Override
-		protected List<Departure> doInBackground(Stop... params) {
+		protected List<Departure> doInBackground(Stop... stops) {
 			CumtdAPI api = new CumtdAPI();
+			
+			Stop stop = stops[0];
 			try {
 				return api.getDeparturesByStop(stop);
 			} catch (Exception e) {
 				exception = e;
+				Log.e("Departure failure", e.getMessage());
 			}
 			return null;
 		}
