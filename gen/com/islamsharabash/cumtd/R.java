@@ -39,27 +39,28 @@ public final class R {
         public static final int ic_menu_myplaces=0x7f02000d;
         public static final int ic_menu_refresh=0x7f02000e;
         public static final int icon=0x7f02000f;
+        public static final int rowselector=0x7f020010;
     }
     public static final class id {
-        public static final int Header=0x7f080009;
-        public static final int Refresh=0x7f08000c;
-        public static final int RelativeLayout01=0x7f080008;
-        public static final int Star=0x7f08000b;
-        public static final int StopEditText=0x7f08000e;
-        public static final int StopName=0x7f08000a;
+        public static final int Header=0x7f08000a;
+        public static final int Refresh=0x7f08000d;
+        public static final int RelativeLayout01=0x7f080009;
+        public static final int Star=0x7f08000c;
+        public static final int StopEditText=0x7f08000f;
+        public static final int StopName=0x7f08000b;
         public static final int balloon_inner_layout=0x7f080001;
         public static final int balloon_item_snippet=0x7f080003;
         public static final int balloon_item_title=0x7f080002;
         public static final int balloon_main_layout=0x7f080000;
-        public static final int close_img_button=0x7f080004;
-        public static final int list_item=0x7f080005;
-        public static final int loading=0x7f08000d;
-        public static final int mainlayout=0x7f08000f;
-        public static final int route=0x7f080006;
-        public static final int star=0x7f080012;
-        public static final int text=0x7f080011;
-        public static final int time=0x7f080007;
-        public static final int touchmap=0x7f080010;
+        public static final int close_img_button=0x7f080005;
+        public static final int list_item=0x7f080006;
+        public static final int loading=0x7f08000e;
+        public static final int mainlayout=0x7f080010;
+        public static final int route=0x7f080007;
+        public static final int star=0x7f080004;
+        public static final int text=0x7f080012;
+        public static final int time=0x7f080008;
+        public static final int touchmap=0x7f080011;
     }
     public static final class layout {
         public static final int balloon_overlay=0x7f030000;

@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.*;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 // wrapper around cumtd's api
 // http://developer.cumtd.com/
@@ -45,6 +46,7 @@ public class CumtdAPI {
 	
 	// we're going to throw the IOException all the way to the ui...
 	private JSONObject apiRequest(String url) throws IOException {
+		Log.d("Making request to:", url);
 		// perform http request
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpGet httpget = new HttpGet(url);

@@ -12,7 +12,6 @@ public class StopOverlayItem extends OverlayItem {
 	}
 	
 	public StopOverlayItem(Stop stop) {
-		
 		super(
 		  new GeoPoint(stop.getLatitude(), stop.getLongitude()),
 		  stop.getName(),

@@ -11,7 +11,7 @@ public class Departure {
 	private String route;
 	private int minutes;
 	private String color;
-	private float  LIGHT_OFFSET= .3f;
+	private float  LIGHT_OFFSET= .4f;
 	private float SAT_OFFSET = -.15f;
 	
 	public Departure(String route, int minutes, String color) {

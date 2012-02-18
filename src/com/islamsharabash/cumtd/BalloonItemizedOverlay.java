@@ -37,6 +37,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.CheckBox;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -56,6 +57,7 @@ public abstract class BalloonItemizedOverlay<Item> extends ItemizedOverlay<Overl
 	private MapView mapView;
 	private BalloonOverlayView balloonView;
 	private View clickRegion;
+	private CheckBox favoriteCheckbox;
 	private int viewOffset;
 	final MapController mc;
 	
@@ -95,7 +97,15 @@ public abstract class BalloonItemizedOverlay<Item> extends ItemizedOverlay<Overl
 	protected boolean onBalloonTap(int index) {
 		return false;
 	}
+	
+	protected boolean onFavoriteTap(int index) {
+		return false;
+	}
 
+	protected boolean isFavoriteChecked(int index) {
+		return false;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.google.android.maps.ItemizedOverlay#onTap(int)
 	 */
@@ -112,6 +122,7 @@ public abstract class BalloonItemizedOverlay<Item> extends ItemizedOverlay<Overl
 		if (balloonView == null) {
 			balloonView = new BalloonOverlayView(mapView.getContext(), viewOffset);
 			clickRegion = (View) balloonView.findViewById(R.id.balloon_inner_layout);
+			favoriteCheckbox = (CheckBox) balloonView.findViewById(R.id.star);
 			isRecycled = false;
 		} else {
 			isRecycled = true;
@@ -132,6 +143,8 @@ public abstract class BalloonItemizedOverlay<Item> extends ItemizedOverlay<Overl
 		params.mode = MapView.LayoutParams.MODE_MAP;
 		
 		setBalloonTouchListener(thisIndex);
+		setBalloonFavoriteTouchListener(thisIndex);
+		setBalloonFavoriteChecked(thisIndex);
 		
 		balloonView.setVisibility(View.VISIBLE);
 
@@ -217,7 +230,49 @@ public abstract class BalloonItemizedOverlay<Item> extends ItemizedOverlay<Overl
 			// method not overridden - do nothing
 			return;
 		}
-
+	}
+	
+	/**
+	 * Sets the onTouchListener for the favorite button on the balloon being displayed
+	 * calling the overridden onFavoriteTap if implemented.
+	 * 
+	 * @param thisIndex - The index of the item whose balloon is tapped.
+	 */
+	private void setBalloonFavoriteTouchListener(final int thisIndex) {
+		try {
+			@SuppressWarnings("unused")
+			Method m = this.getClass().getDeclaredMethod("onFavoriteTap", int.class);
+			
+			favoriteCheckbox.setOnTouchListener(new OnTouchListener() {
+				public boolean onTouch(View v, MotionEvent event) {
+					onFavoriteTap(thisIndex);
+					return true;
+				}
+			});
+			
+		} catch (SecurityException e) {
+			Log.e("BalloonItemizedOverlay", "setBalloonFavoriteTouchListener reflection SecurityException");
+			return;
+		} catch (NoSuchMethodException e) {
+			// method not overridden - do nothing
+			return;
+		}
+	}
+	
+	private void setBalloonFavoriteChecked(final int thisIndex) {
+		try {
+			@SuppressWarnings("unused")
+			Method m = this.getClass().getDeclaredMethod("isFavoriteChecked", int.class);
+			
+			favoriteCheckbox.setChecked(isFavoriteChecked(thisIndex));
+			
+		} catch (SecurityException e) {
+			Log.e("BalloonItemizedOverlay", "setBalloonFavoriteChecked reflection SecurityException");
+			return;
+		} catch (NoSuchMethodException e) {
+			// method not overridden - do nothing
+			return;
+		}
 	}
 	
 }

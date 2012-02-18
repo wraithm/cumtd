@@ -100,4 +100,5 @@ public class StopAdapter extends BaseAdapter implements ListAdapter {
 			stop.toggleFavorite();
 		}
 	};
+	
 }

@@ -79,6 +79,7 @@ public class DeparturesActivity extends ListActivity {
 		@Override
 		protected List<Departure> doInBackground(Stop... stops) {
 			CumtdAPI api = new CumtdAPI();
+			Log.d("getting list of departures in background", "yes");
 			
 			Stop stop = stops[0];
 			try {
@@ -86,6 +87,7 @@ public class DeparturesActivity extends ListActivity {
 			} catch (Exception e) {
 				exception = e;
 				Log.e("Departure failure", e.getMessage());
+				e.printStackTrace();
 			}
 			return null;
 		}
