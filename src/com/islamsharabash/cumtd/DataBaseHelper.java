@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 // code to copy db from assets was found on net, forgot from where
 public class DatabaseHelper extends SQLiteOpenHelper{
@@ -14,16 +15,16 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	private static String DB_NAME = "cumtdDB.db";
 	private static String DB_PATH = "/data/data/com.islamsharabash.cumtd/databases/";
     
-	private static final int VERSION = 6;
-	private SQLiteDatabase database; 
+	private static final int VERSION = 7;
+	private SQLiteDatabase database;
 	private final Context context;
-	 
+
     /**
      * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
      * @param context
      */
     public DatabaseHelper(Context context) {
-    	super(context, DB_NAME, null, 1);
+    	super(context, DB_NAME, null, VERSION);
         this.context = context;
     }	
     
@@ -130,7 +131,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public synchronized void close() {
     	    if(database != null)
     		    database.close();
- 
     	    super.close();
 	}
     
@@ -140,11 +140,35 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		openDatabase();
 		// starting fresh, delete any database that's not current
 		// sorry about the favorites :(
-		if (oldVersion != DatabaseHelper.VERSION) {
+		if (oldVersion < 6) {
 			deleteRecreate(db);
 		}
+
+		if ((oldVersion == 6) && (newVersion == 7)) {
+			six_to_seven_update();
+		}
+		
+		close();
+	}
+	
+	private void six_to_seven_update() {
+		Log.d("upgrading db", "Updating db names");
+		rename_stop(37, "First & Stadium");
+		rename_stop(76, "Fifth & Chalmers");
+		rename_stop(52, "Fourth and Armory");
+		rename_stop(2375, "Windsor and Myra Ridge");
+		rename_stop(490, "Clayton and Bellerieve");
+	}
+	
+	private void rename_stop(int id, String new_name) {
+		String query = "UPDATE stopTable " +
+					   "SET _name = '" + new_name + 
+					   "' WHERE _id = " + Integer.toString(id);
+		Log.d("executing", query);
+		database.execSQL(query);		
 	}
 	
 	public SQLiteDatabase getDatabase() {
