@@ -5,7 +5,6 @@ import java.util.List;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -71,7 +70,6 @@ public class DeparturesActivity extends ListActivity {
 	// sets the loading, gets the search results, and updates the adapter with it
 	// the third param (string) for asynctask is the type passed to onpostexecute
 	private class GetBusTimes extends AsyncTask<Stop, Void, List<Departure>> {
-		private Exception exception = null;
 		protected void onPreExecute() {
 			loadingBar.setVisibility(View.VISIBLE);
 		}
@@ -79,25 +77,16 @@ public class DeparturesActivity extends ListActivity {
 		@Override
 		protected List<Departure> doInBackground(Stop... stops) {
 			CumtdAPI api = new CumtdAPI();
-			Log.d("getting list of departures in background", "yes");
-			
 			Stop stop = stops[0];
 			try {
 				return api.getDeparturesByStop(stop);
 			} catch (Exception e) {
-				exception = e;
-				Log.e("Departure failure", e.getMessage());
 				e.printStackTrace();
 			}
 			return null;
 		}
 		
 		protected void onPostExecute(List<Departure> departures) {
-			if (exception != null) {
-				//TODO oh shit, we got an exception, notify the user with a toast or something depending on what happened...
-				return;
-			}
-			
 			adapter.setDepartures(departures);
 			adapter.notifyDataSetChanged();
 			loadingBar.setVisibility(View.INVISIBLE);
