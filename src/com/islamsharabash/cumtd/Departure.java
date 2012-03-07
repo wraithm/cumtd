@@ -4,6 +4,9 @@ import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 //TODO this will depend on the new version of the api (to be released within a week of 11/15)
 // TODO hold out for this: http://developer.cumtd.com/forum/default.aspx?g=posts&m=89&#post89
 public class Departure {
@@ -52,7 +55,14 @@ public class Departure {
 			return "DUE";
 		}
 		
-		return Integer.toString(this.minutes) + "m";
+        /*TODO I used h (12 hour) instead of H (24 hour). I had difficulty trying to get access to the user's preference.
+        If someone puts in a toggle for this, they should ask if they want 12 or 24 hour time, and change this to
+        "H:mm" if the user prefers 24 hour time.*/ 
+        SimpleDateFormat timingFormat = new SimpleDateFormat("h:mm");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, this.minutes);
+
+		return Integer.toString(this.minutes) + "m " + timingFormat.format(cal.getTime());
 	}
 	
 	// returns the color 
